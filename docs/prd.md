@@ -2,7 +2,7 @@
 
 ## Overview
 
-The OpenCode Agent Manager plugin is a local OpenCode extension that helps users inspect, understand, and modify OpenCode agent and Oh My OpenCode settings. It will provide a terminal-first configuration experience, built-in documentation, and support for subagent orchestration.
+The OpenCode Agent Manager plugin is a local OpenCode extension that helps users inspect, understand, and modify OpenCode agent and Oh My OpenCode settings. It will provide a menu-based entry that is discoverable from OpenCode's command palette / quick-open (e.g., Ctrl+P on Windows/Linux or Cmd+P on macOS) to open the Agent Manager UI, in addition to a terminal-first configuration experience (TUI), built-in documentation, and support for subagent orchestration.
 
 ## Goals
 
