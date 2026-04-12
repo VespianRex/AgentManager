@@ -18,9 +18,9 @@ This project is designed to support both Oh My OpenCode and generic OpenCode con
 
 ## Running tests
 
-- `npm test` — run the full test suite
-- `npm run smoke` — run the smoke test
-- `npm run e2e` — run the end-to-end plugin behavior test
+- `bun run test` — run the full test suite
+- `bun run smoke` — run the smoke test
+- `bun run e2e` — run the end-to-end plugin behavior test
 
 ## What this plugin provides
 

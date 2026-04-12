@@ -10,12 +10,8 @@ describe("build (bun + tsc)", () => {
     // Clean previous build
     try { execSync('rm -rf dist'); } catch (e) {}
 
-    // Try using bun to run the TypeScript compiler; fall back to local tsc if bun isn't available
-    try {
-      execSync('bun run tsc -p tsconfig.json', { stdio: 'inherit' });
-    } catch (err) {
-      execSync('./node_modules/.bin/tsc -p tsconfig.json', { stdio: 'inherit' });
-    }
+    // Build using bun
+    execSync('bun run build', { stdio: 'inherit' });
 
     assert.ok(fs.existsSync(distIndex), 'Expected compiled dist/index.js to exist');
   });

@@ -10,7 +10,7 @@ describe('deploy compiled plugin', () => {
     try { execSync('rm -rf dist .opencode/plugins/agent-manager/index.js'); } catch (e) {}
 
     // Run build and deploy script (deploy-plugin should be implemented)
-    execSync('npm run build && npm run deploy-plugin', { stdio: 'inherit' });
+    execSync('bun run build && bun run deploy-plugin', { stdio: 'inherit' });
 
     const installedPath = path.join(process.cwd(), '.opencode', 'plugins', 'agent-manager', 'index.js');
     assert.ok(fs.existsSync(installedPath), 'Expected compiled plugin entry to be deployed at .opencode/plugins/agent-manager/index.js');
