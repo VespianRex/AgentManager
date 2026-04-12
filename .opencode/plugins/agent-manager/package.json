@@ -4,9 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "bun run tsc -p tsconfig.json",
-    "install-plugin": "mkdir -p .opencode/plugins/agent-manager-built && rsync -a dist/ .opencode/plugins/agent-manager-built/",
-    "deploy-plugin": "mkdir -p .opencode/plugins/agent-manager && rsync -a dist/ .opencode/plugins/agent-manager/",
     "test": "sh -c 'find test -name \"*.test.ts\" -print0 | xargs -0 -n1 tsx'",
     "smoke": "sh -c 'tsx test/smoke.test.ts'",
     "e2e": "sh -c 'tsx test/e2e.test.ts'",

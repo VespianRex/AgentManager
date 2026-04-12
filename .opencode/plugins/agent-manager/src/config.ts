@@ -29,15 +29,17 @@ export const writeJsoncFile = async (filePath: string, document: unknown) => {
 
 export const findConfigFiles = async (cwd: string): Promise<ConfigLocation[]> => {
   const results: ConfigLocation[] = [];
-  for (const location of CONFIG_LOCATIONS) {
-    const resolved = normalizePath(location.path, cwd);
-    try {
-      await fs.access(resolved);
-      results.push({ ...location, path: resolved });
-    } catch {
-      // ignore missing files
-    }
-  }
+  await Promise.all(
+    CONFIG_LOCATIONS.map(async (location) => {
+      const resolved = normalizePath(location.path, cwd);
+      try {
+        await fs.access(resolved);
+        results.push({ ...location, path: resolved });
+      } catch {
+        // ignore missing files
+      }
+    }),
+  );
   return results;
 };
 

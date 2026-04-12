@@ -1,0 +1,53 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  
+  "agents": {
+    "Sisyphus": {
+      "model": "anthropic/claude-opus-4-5",
+      "temperature": 0.2
+    },
+    "oracle": {
+      "model": "openai/gpt-5.2",
+      "permission": {
+        "edit": "ask",
+        "bash": "ask"
+      }
+    },
+    "explore": {
+      "model": "opencode/gpt-5-nano",
+      "permission": {
+        "webfetch": "allow"
+      }
+    }
+  },
+
+  "categories": {
+    "quick": {
+      "model": "anthropic/claude-haiku-4-5",
+      "temperature": 0.4,
+      "prompt_append": "Focus on fast, low-cost tasks."
+    },
+    "visual-engineering": {
+      "model": "google/gemini-3-pro",
+      "temperature": 0.7,
+      "prompt_append": "Produce UI/UX-safe frontend code and component designs."
+    }
+  },
+
+  "sisyphus_agent": {
+    "disabled": false,
+    "planner_enabled": true,
+    "replace_plan": true
+  },
+
+  "background_task": {
+    "defaultConcurrency": 4,
+    "providerConcurrency": {
+      "anthropic": 2,
+      "openai": 3
+    }
+  },
+
+  "disabled_hooks": ["comment-checker"],
+  "disabled_skills": ["playwright"]
+}
