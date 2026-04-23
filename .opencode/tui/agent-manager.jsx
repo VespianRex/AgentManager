@@ -262,11 +262,13 @@ async function reloadAgents() {
     <Select
       title="Agent Manager"
       options={options}
+      current={returnIndex && returnIndex[0] !== undefined ? returnIndex[0] : undefined}
       placeholder="↓/↑ navigate · Enter edit · r reload"
-      current={returnIndex ? returnIndex[0] : undefined}
       onSelect={(item) => {
-        if (returnIndex) returnIndex[0] = options.indexOf(item);
-        showAgentDetail(api, loadedConfigs, item.value.agentKey, item.value.agent, item.value.mergedAgents, returnIndex);
+        if (item && item.value) {
+          if (returnIndex) returnIndex[0] = options.indexOf(item);
+          showAgentDetail(api, loadedConfigs, item.value.agentKey, item.value.agent, item.value.mergedAgents, returnIndex);
+        }
       }}
     />
   ));
@@ -315,9 +317,10 @@ function showAgentDetail(api, loadedConfigs, agentKey, agent, mergedAgents, retu
   api.ui.dialog.replace(() => (
     <Select
       title={`${statusIcon} ${displayName} ${roleInfo ? `(${roleInfo})` : ""}`}
-      options={options}
+      rows={options}
       placeholder="↑/↓ navigate · Enter to select"
-      onSelect={(item) => {
+      onValueChange={(item) => {
+        if (!item || !item.value) return;
         const { action } = item.value;
         if (action === "editModel") {
           // Defer to next event loop tick - dialog system needs to finish processing
@@ -392,9 +395,10 @@ function editModel(api, loadedConfigs, agentKey, agent, mergedAgents, returnInde
   api.ui.dialog.replace(() => (
     <Select
       title={`Select Provider — ${agentKey}`}
-      options={providerOptions}
+      rows={providerOptions}
       placeholder="↑/↓ navigate · Enter select"
-      onSelect={(item) => {
+      onValueChange={(item) => {
+        if (!item || !item.value) return;
         const { action, providerId, provider } = item.value;
         if (action === "selectProvider") {
           showModelsForProvider(api, loadedConfigs, agentKey, agent, provider, mergedAgents, returnIndex);
@@ -425,9 +429,10 @@ function showModelsForProvider(api, loadedConfigs, agentKey, agent, provider, me
   api.ui.dialog.replace(() => (
     <Select
       title={`Models — ${pid} — ${agentKey}`}
-      options={options}
+      rows={options}
       placeholder="↑/↓ navigate · Enter select"
-      onSelect={(item) => {
+      onValueChange={(item) => {
+        if (!item || !item.value) return;
         if (item.value.action === "back") {
           editModel(api, loadedConfigs, agentKey, agent, mergedAgents, returnIndex);
         } else {
@@ -457,9 +462,10 @@ function showAllModels(api, loadedConfigs, agentKey, agent, mergedAgents, return
   api.ui.dialog.replace(() => (
     <Select
       title={`All Models — ${agentKey}`}
-      options={options}
+      rows={options}
       placeholder="↑/↓ navigate · Enter select"
-      onSelect={(item) => {
+      onValueChange={(item) => {
+        if (!item || !item.value) return;
         if (item.value.action === "back") {
           editModel(api, loadedConfigs, agentKey, agent, mergedAgents, returnIndex);
         } else {
