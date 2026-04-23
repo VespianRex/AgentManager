@@ -1,5 +1,6 @@
 import type { AgentManagerDocument, ConfigSummary } from "./types.js";
 import { getSystemOverview } from "./agentSystem.js";
+import { KNOWN_HOOKS, PERMISSION_VALUES } from "./hooks.js";
 
 export interface SubAgentContext {
   config: AgentManagerDocument;
@@ -14,35 +15,6 @@ export interface SubAgentResult {
   details?: unknown;
 }
 
-const PERMISSION_VALUES = ["ask", "allow", "deny"];
-const KNOWN_HOOKS = [
-  "todo-continuation-enforcer",
-  "context-window-monitor",
-  "session-recovery",
-  "session-notification",
-  "comment-checker",
-  "grep-output-truncator",
-  "tool-output-truncator",
-  "directory-agents-injector",
-  "directory-readme-injector",
-  "empty-task-response-detector",
-  "think-mode",
-  "anthropic-context-window-limit-recovery",
-  "rules-injector",
-  "background-notification",
-  "auto-update-checker",
-  "startup-toast",
-  "keyword-detector",
-  "agent-usage-reminder",
-  "non-interactive-env",
-  "interactive-bash-session",
-  "compaction-context-injector",
-  "thinking-block-validator",
-  "claude-code-hooks",
-  "ralph-loop",
-  "preemptive-compaction",
-];
-
 export const runSubAgentPipeline = (context: SubAgentContext): SubAgentResult[] => {
   const results: SubAgentResult[] = [];
   results.push(discoveryAgent(context));
@@ -53,7 +25,7 @@ export const runSubAgentPipeline = (context: SubAgentContext): SubAgentResult[] 
   return results;
 };
 
-const discoveryAgent = (context: SubAgentContext): SubAgentResult => {
+export const discoveryAgent = (context: SubAgentContext): SubAgentResult => {
   const { summary, source } = context;
   return {
     name: "ConfigDiscovery",
@@ -63,7 +35,7 @@ const discoveryAgent = (context: SubAgentContext): SubAgentResult => {
   };
 };
 
-const systemExplanationAgent = (context: SubAgentContext): SubAgentResult => {
+export const systemExplanationAgent = (context: SubAgentContext): SubAgentResult => {
   const { agents, fallbackChains, categoryChains, permissions } = getSystemOverview();
   return {
     name: "SystemExplanation",
@@ -73,22 +45,45 @@ const systemExplanationAgent = (context: SubAgentContext): SubAgentResult => {
   };
 };
 
-const validationAgent = (context: SubAgentContext): SubAgentResult => {
-  const foundHooks = context.config.disabled_hooks ?? [];
-  const invalidHooks = foundHooks.filter((hook) => !KNOWN_HOOKS.includes(hook));
-  const permissionProblems: string[] = [];
-
-  const agents = context.config.agents ?? {};
+export const validateAgentPermissions = (agents: Record<string, unknown> | null | undefined): string[] => {
+  if (!agents) return [];
+  
+  const issues: string[] = [];
+  const knownPermissionKeys = ["edit", "bash", "read", "write"];
+  
   for (const [name, agent] of Object.entries(agents)) {
-    const permission = (agent as any).permission;
-    if (permission && typeof permission === "object") {
-      for (const [key, value] of Object.entries(permission)) {
-        if (!PERMISSION_VALUES.includes(value as string)) {
-          permissionProblems.push(`Agent ${name} permission ${key} uses invalid value '${value}'.`);
+    const agentObj = agent as Record<string, unknown> | undefined;
+    if (!agentObj) continue;
+
+    const permission = agentObj.permission;
+    if (permission && typeof permission === "object" && permission !== null) {
+      for (const [key, value] of Object.entries(permission as Record<string, unknown>)) {
+        // Only validate known permission keys
+        if (knownPermissionKeys.includes(key)) {
+          // For known keys, only string values are valid
+          if (typeof value === "string") {
+            if (!PERMISSION_VALUES.includes(value)) {
+              issues.push(`Agent ${name} permission ${key} uses invalid value '${value}'.`);
+            }
+          } else {
+            // Non-string values (except null/undefined) are invalid
+            if (value !== null && value !== undefined) {
+              issues.push(`Agent ${name} permission ${key} uses invalid value '${value}'.`);
+            }
+          }
         }
+        // Ignore unknown keys completely
       }
     }
   }
+  return issues;
+};
+
+export const validationAgent = (context: SubAgentContext): SubAgentResult => {
+  const config = context.config ?? {};
+  const foundHooks = config.disabled_hooks ?? [];
+  const invalidHooks = foundHooks.filter((hook) => !KNOWN_HOOKS.includes(hook));
+  const permissionProblems = validateAgentPermissions(config.agents ?? {});
 
   const messages = [] as string[];
   if (invalidHooks.length) {
@@ -106,33 +101,38 @@ const validationAgent = (context: SubAgentContext): SubAgentResult => {
   };
 };
 
-const orchestrationAgent = (context: SubAgentContext): SubAgentResult => {
-  const hasSisyphus = Boolean(context.config.sisyphus_agent);
-  const hasBackground = Boolean(context.config.background_task);
+export const orchestrationAgent = (context: SubAgentContext): SubAgentResult => {
+  const config = context.config ?? {} as Record<string, unknown>;
+  const hasSisyphus = Boolean(config.sisyphus_agent);
+  const hasBackground = Boolean(config.background_task);
   const clue = hasSisyphus && hasBackground
     ? "Subagent orchestration settings are present."
     : hasSisyphus
-      ? "Sisyphus orchestrator is configured; background_task settings are missing."
-      : "No Sisyphus orchestrator config found; default OpenCode orchestration applies.";
+    ? "Sisyphus orchestrator is configured; background_task settings are missing."
+    : "No Sisyphus orchestrator config found; default OpenCode orchestration applies.";
 
   return {
     name: "OrchestrationReview",
     status: "success",
     message: clue,
     details: {
-      sisyphus: context.config.sisyphus_agent ?? null,
-      background_task: context.config.background_task ?? null,
+      sisyphus: config.sisyphus_agent ?? null,
+      background_task: config.background_task ?? null,
     },
   };
 };
 
-const instructionFollowAgent = (context: SubAgentContext): SubAgentResult => {
+export const findPromptAppendDuplicates = (agents: Record<string, unknown> | null | undefined): string[] => {
+  if (!agents) return [];
+  
   const duplicates: string[] = [];
   const promptAppends = new Map<string, string>();
 
-  const agents = context.config.agents ?? {};
   for (const [name, agent] of Object.entries(agents)) {
-    const prompt_append = (agent as any).prompt_append;
+    const agentObj = agent as Record<string, unknown> | undefined;
+    if (!agentObj) continue;
+
+    const prompt_append = agentObj.prompt_append;
     if (typeof prompt_append === "string") {
       if (promptAppends.has(prompt_append)) {
         duplicates.push(name);
@@ -141,6 +141,12 @@ const instructionFollowAgent = (context: SubAgentContext): SubAgentResult => {
       }
     }
   }
+  return duplicates;
+};
+
+export const instructionFollowAgent = (context: SubAgentContext): SubAgentResult => {
+  const config = context.config ?? {} as Record<string, unknown>;
+  const duplicates = findPromptAppendDuplicates(config.agents as Record<string, unknown> ?? {});
 
   const issues = [] as string[];
   if (duplicates.length) {

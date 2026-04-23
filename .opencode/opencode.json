@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  
+  "agents": {
+    "code-reviewer": {
+      "fallbacks": ["openai", "anthropic", "google", "github-copilot", "opencode"],
+      "mode": "subagent",
+      "description": "Code quality analysis and best practice enforcement"
+    },
+    "security-auditor": {
+      "fallbacks": ["openai", "anthropic", "google", "github-copilot", "opencode"],
+      "mode": "subagent",
+      "description": "Security vulnerability detection and OWASP compliance"
+    },
+    "architect-review": {
+      "fallbacks": ["openai", "anthropic", "google", "github-copilot", "opencode"],
+      "mode": "subagent",
+      "description": "Architecture and design pattern review"
+    },
+    "performance-engineer": {
+      "fallbacks": ["openai", "anthropic", "google", "github-copilot", "opencode"],
+      "mode": "subagent",
+      "description": "Performance analysis and scalability assessment"
+    },
+    "test-automator": {
+      "fallbacks": ["anthropic", "github-copilot", "opencode", "antigravity", "google"],
+      "mode": "subagent",
+      "description": "Test coverage analysis and test automation"
+    },
+    "tdd-orchestrator": {
+      "fallbacks": ["openai", "anthropic", "google", "github-copilot", "opencode"],
+      "mode": "subagent",
+      "description": "TDD workflow orchestration and enforcement"
+    }
+  }
+}

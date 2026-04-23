@@ -16,14 +16,5 @@ export interface ConfigSummary {
   disabledSkills: string[];
 }
 
-export interface AgentManagerDocument {
-  agents?: Record<string, unknown>;
-  categories?: Record<string, unknown>;
-  disabled_hooks?: string[];
-  disabled_agents?: string[];
-  disabled_skills?: string[];
-  sisyphus_agent?: Record<string, unknown>;
-  background_task?: Record<string, unknown>;
-  lsp?: Record<string, unknown>;
-  experimental?: Record<string, unknown>;
-}
+// Re-export type from Zod schema for consistency
+export type AgentManagerDocument = import("./schema.js").AgentManagerDocument;

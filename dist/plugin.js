@@ -41,18 +41,30 @@ export const AgentManagerPlugin = async ({ directory }) => {
                 async execute(args, context) {
                     const target = resolveTarget(args.configPath);
                     if (!target) {
-                        return JSON.stringify({ message: "No OpenCode config file found. Create .opencode/oh-my-opencode.json or opencode.json in your project first." });
+                        return JSON.stringify({ message: "No OpenCode config file found. Create .opencode/oh-my-opencode.json, opencode.json, or .opencode/package.json in your project first." });
                     }
                     if (args.action === "save") {
                         const document = args.document;
                         if (!document) {
                             return JSON.stringify({ message: "No document provided for save action." });
                         }
-                        const backupPath = await saveConfig(target, document);
-                        return JSON.stringify({ message: "Configuration saved.", configPath: target.path, backupPath });
+                        try {
+                            const backupPath = await saveConfig(target, document);
+                            return JSON.stringify({ message: "Configuration saved.", configPath: target.path, backupPath });
+                        }
+                        catch (error) {
+                            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+                            return JSON.stringify({ message: `Failed to save configuration: ${errorMessage}` });
+                        }
                     }
-                    const inspected = await inspectTarget(target);
-                    return JSON.stringify(inspected);
+                    try {
+                        const inspected = await inspectTarget(target);
+                        return JSON.stringify(inspected);
+                    }
+                    catch (error) {
+                        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+                        return JSON.stringify({ message: `Failed to inspect configuration: ${errorMessage}` });
+                    }
                 },
             }),
         },

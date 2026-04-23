@@ -9,7 +9,8 @@
 
 ## Core components
 
-- **Plugin entrypoint**: `.opencode/plugins/agent-manager.ts`
+- **Plugin entrypoint**: `.opencode/plugins/agent-manager.js`, which loads the runtime bundle in `.opencode/plugins/agent-manager/`
+- **TUI command**: global `command.agent-manager` in `~/.config/opencode/opencode.json`
 - **Types and helpers**: `.opencode/plugins/agent-manager.types.ts`
 - **Documentation**: `docs/` folder with guides and diagrams
 - **Examples**: sample config templates in `examples/`

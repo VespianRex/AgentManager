@@ -1,16 +1,17 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
-import { execSync } from 'node:child_process';
+import { describe, it } from 'bun:test';
+import assert from 'bun:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 
 describe('deploy compiled plugin', () => {
   it('builds and deploys compiled plugin into .opencode/plugins/agent-manager', () => {
-    // Clean previous
-    try { execSync('rm -rf dist .opencode/plugins/agent-manager/index.js'); } catch (e) {}
+    const cleanup = Bun.spawnSync(["rm", "-rf", "dist", ".opencode/plugins/agent-manager/index.js"]);
+    assert.strictEqual(cleanup.exitCode, 0, new TextDecoder().decode(cleanup.stderr));
 
-    // Run build and deploy script (deploy-plugin should be implemented)
-    execSync('bun run build && bun run deploy-plugin', { stdio: 'inherit' });
+    const build = Bun.spawnSync(["bun", "run", "build"]);
+    assert.strictEqual(build.exitCode, 0, new TextDecoder().decode(build.stderr));
+    const deploy = Bun.spawnSync(["bun", "run", "deploy-plugin"]);
+    assert.strictEqual(deploy.exitCode, 0, new TextDecoder().decode(deploy.stderr));
 
     const installedPath = path.join(process.cwd(), '.opencode', 'plugins', 'agent-manager', 'index.js');
     assert.ok(fs.existsSync(installedPath), 'Expected compiled plugin entry to be deployed at .opencode/plugins/agent-manager/index.js');

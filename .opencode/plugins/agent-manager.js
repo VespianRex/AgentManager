@@ -1,1 +1,1 @@
-export { AgentManagerPlugin } from "../../src/plugin.js";
+export { server } from "./agent-manager/index.js";

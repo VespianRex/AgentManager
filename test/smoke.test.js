@@ -1,5 +1,5 @@
-import { describe, it } from "node:test";
-import assert from "node:assert";
+import { describe, it } from "bun:test";
+import assert from "bun:assert";
 import os from "node:os";
 import path from "node:path";
 import fs from "node:fs/promises";

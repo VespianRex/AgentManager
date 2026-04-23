@@ -1,4 +1,4 @@
-#!/usr/bin/env bunx tsx
+#!/usr/bin/env bun
 import readline from "readline";
 import { findConfigFiles, loadConfig, summarizeConfig } from "../src/config.js";
 import { getOrchestrationDiagram, getFallbackDiagram } from "../src/agentSystem.js";

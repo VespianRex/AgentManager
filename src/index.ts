@@ -1,3 +1,2 @@
-// Module entrypoint that re-exports both server and tui plugin entries
+// Module entrypoint for the server-side plugin hook only.
 export { AgentManagerPlugin as server } from "./plugin.js";
-export { tui } from "./tui.js";

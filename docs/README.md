@@ -22,6 +22,6 @@ Development and build (Bun-only):
 - Deploy plugin: `bun run deploy-plugin` (writes to `.opencode/plugins/agent-manager`)
 - Run tests: `bun run test` (test runner script is configured in package.json)
 
-The plugin registers a Command Palette entry so it is discoverable via OpenCode's palette. Look for the command titled **Open Agent Manager** (slash name: `agent-manager`) in the Command Palette/Quick Open. By default the plugin does not override host keybindings — use your host's Command Palette (e.g., Cmd+Shift+P on macOS or Ctrl+Shift+P on Windows/Linux) to open it.
+The `Agent Manager` command is exposed through the global `command.agent-manager` entry in `~/.config/opencode/opencode.json`. Look for `/agent-manager` in the TUI command list. The plugin itself lives in `.opencode/plugins/agent-manager.js` and only provides the server-side tool hook.
 
 From OpenCode, invoke the plugin using the custom tool or command that will be implemented in the plugin entrypoint.

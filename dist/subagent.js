@@ -1,32 +1,5 @@
 import { getSystemOverview } from "./agentSystem.js";
-const PERMISSION_VALUES = ["ask", "allow", "deny"];
-const KNOWN_HOOKS = [
-    "todo-continuation-enforcer",
-    "context-window-monitor",
-    "session-recovery",
-    "session-notification",
-    "comment-checker",
-    "grep-output-truncator",
-    "tool-output-truncator",
-    "directory-agents-injector",
-    "directory-readme-injector",
-    "empty-task-response-detector",
-    "think-mode",
-    "anthropic-context-window-limit-recovery",
-    "rules-injector",
-    "background-notification",
-    "auto-update-checker",
-    "startup-toast",
-    "keyword-detector",
-    "agent-usage-reminder",
-    "non-interactive-env",
-    "interactive-bash-session",
-    "compaction-context-injector",
-    "thinking-block-validator",
-    "claude-code-hooks",
-    "ralph-loop",
-    "preemptive-compaction",
-];
+import { KNOWN_HOOKS, PERMISSION_VALUES } from "./hooks.js";
 export const runSubAgentPipeline = (context) => {
     const results = [];
     results.push(discoveryAgent(context));
@@ -36,7 +9,7 @@ export const runSubAgentPipeline = (context) => {
     results.push(instructionFollowAgent(context));
     return results;
 };
-const discoveryAgent = (context) => {
+export const discoveryAgent = (context) => {
     const { summary, source } = context;
     return {
         name: "ConfigDiscovery",
@@ -45,7 +18,7 @@ const discoveryAgent = (context) => {
         details: summary,
     };
 };
-const systemExplanationAgent = (context) => {
+export const systemExplanationAgent = (context) => {
     const { agents, fallbackChains, categoryChains, permissions } = getSystemOverview();
     return {
         name: "SystemExplanation",
@@ -54,21 +27,44 @@ const systemExplanationAgent = (context) => {
         details: { agents, fallbackChains, categoryChains, permissions },
     };
 };
-const validationAgent = (context) => {
-    const foundHooks = context.config.disabled_hooks ?? [];
-    const invalidHooks = foundHooks.filter((hook) => !KNOWN_HOOKS.includes(hook));
-    const permissionProblems = [];
-    const agents = context.config.agents ?? {};
+export const validateAgentPermissions = (agents) => {
+    if (!agents)
+        return [];
+    const issues = [];
+    const knownPermissionKeys = ["edit", "bash", "read", "write"];
     for (const [name, agent] of Object.entries(agents)) {
-        const permission = agent.permission;
-        if (permission && typeof permission === "object") {
+        const agentObj = agent;
+        if (!agentObj)
+            continue;
+        const permission = agentObj.permission;
+        if (permission && typeof permission === "object" && permission !== null) {
             for (const [key, value] of Object.entries(permission)) {
-                if (!PERMISSION_VALUES.includes(value)) {
-                    permissionProblems.push(`Agent ${name} permission ${key} uses invalid value '${value}'.`);
+                // Only validate known permission keys
+                if (knownPermissionKeys.includes(key)) {
+                    // For known keys, only string values are valid
+                    if (typeof value === "string") {
+                        if (!PERMISSION_VALUES.includes(value)) {
+                            issues.push(`Agent ${name} permission ${key} uses invalid value '${value}'.`);
+                        }
+                    }
+                    else {
+                        // Non-string values (except null/undefined) are invalid
+                        if (value !== null && value !== undefined) {
+                            issues.push(`Agent ${name} permission ${key} uses invalid value '${value}'.`);
+                        }
+                    }
                 }
+                // Ignore unknown keys completely
             }
         }
     }
+    return issues;
+};
+export const validationAgent = (context) => {
+    const config = context.config ?? {};
+    const foundHooks = config.disabled_hooks ?? [];
+    const invalidHooks = foundHooks.filter((hook) => !KNOWN_HOOKS.includes(hook));
+    const permissionProblems = validateAgentPermissions(config.agents ?? {});
     const messages = [];
     if (invalidHooks.length) {
         messages.push(`Unknown hooks disabled: ${invalidHooks.join(", ")}.`);
@@ -83,9 +79,10 @@ const validationAgent = (context) => {
         details: { invalidHooks, permissionProblems },
     };
 };
-const orchestrationAgent = (context) => {
-    const hasSisyphus = Boolean(context.config.sisyphus_agent);
-    const hasBackground = Boolean(context.config.background_task);
+export const orchestrationAgent = (context) => {
+    const config = context.config ?? {};
+    const hasSisyphus = Boolean(config.sisyphus_agent);
+    const hasBackground = Boolean(config.background_task);
     const clue = hasSisyphus && hasBackground
         ? "Subagent orchestration settings are present."
         : hasSisyphus
@@ -96,17 +93,21 @@ const orchestrationAgent = (context) => {
         status: "success",
         message: clue,
         details: {
-            sisyphus: context.config.sisyphus_agent ?? null,
-            background_task: context.config.background_task ?? null,
+            sisyphus: config.sisyphus_agent ?? null,
+            background_task: config.background_task ?? null,
         },
     };
 };
-const instructionFollowAgent = (context) => {
+export const findPromptAppendDuplicates = (agents) => {
+    if (!agents)
+        return [];
     const duplicates = [];
     const promptAppends = new Map();
-    const agents = context.config.agents ?? {};
     for (const [name, agent] of Object.entries(agents)) {
-        const prompt_append = agent.prompt_append;
+        const agentObj = agent;
+        if (!agentObj)
+            continue;
+        const prompt_append = agentObj.prompt_append;
         if (typeof prompt_append === "string") {
             if (promptAppends.has(prompt_append)) {
                 duplicates.push(name);
@@ -116,6 +117,11 @@ const instructionFollowAgent = (context) => {
             }
         }
     }
+    return duplicates;
+};
+export const instructionFollowAgent = (context) => {
+    const config = context.config ?? {};
+    const duplicates = findPromptAppendDuplicates(config.agents ?? {});
     const issues = [];
     if (duplicates.length) {
         issues.push(`Detected repeated prompt_append values for agents: ${duplicates.join(", ")}. Consider using shared categories or a DRY prompt strategy.`);

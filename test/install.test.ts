@@ -1,18 +1,19 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
-import { execSync } from 'node:child_process';
+import { describe, it } from 'bun:test';
+import assert from 'bun:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 
 describe('install compiled plugin', () => {
-  it('builds and installs compiled plugin into .opencode/plugins/agent-manager-built', () => {
-    // Ensure clean state
-    try { execSync('rm -rf dist .opencode/plugins/agent-manager-built'); } catch (e) {}
+  it('builds and installs compiled plugin into .opencode/plugins/agent-manager', () => {
+    const cleanup = Bun.spawnSync(["rm", "-rf", "dist", ".opencode/plugins/agent-manager"]);
+    assert.strictEqual(cleanup.exitCode, 0, new TextDecoder().decode(cleanup.stderr));
 
-    // Run build and installation script (install-plugin should be implemented)
-    execSync('bun run build && bun run install-plugin', { stdio: 'inherit' });
+    const build = Bun.spawnSync(["bun", "run", "build"]);
+    assert.strictEqual(build.exitCode, 0, new TextDecoder().decode(build.stderr));
+    const install = Bun.spawnSync(["bun", "run", "install-plugin"]);
+    assert.strictEqual(install.exitCode, 0, new TextDecoder().decode(install.stderr));
 
-    const installedPath = path.join(process.cwd(), '.opencode', 'plugins', 'agent-manager-built', 'index.js');
-    assert.ok(fs.existsSync(installedPath), 'Expected compiled plugin entry to be installed at .opencode/plugins/agent-manager-built/index.js');
+    const installedPath = path.join(process.cwd(), '.opencode', 'plugins', 'agent-manager', 'index.js');
+    assert.ok(fs.existsSync(installedPath), 'Expected compiled plugin entry to be installed at .opencode/plugins/agent-manager/index.js');
   });
 });

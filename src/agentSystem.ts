@@ -1,41 +1,14 @@
-export const OH_MY_OPENCODE_AGENTS = {
-  Sisyphus: {
-    role: "main orchestrator",
-    description: "Manages the overall work plan, delegates tasks, and ensures completion.",
-  },
-  oracle: {
-    role: "debugging and architecture expert",
-    description: "Review code, propose fixes, and assist with complex technical decisions.",
-  },
-  librarian: {
-    role: "research and documentation",
-    description: "Lookup docs, search examples, and provide authoritative references.",
-  },
-  explore: {
-    role: "fast codebase exploration",
-    description: "Map the codebase using cheap models and identify relevant files quickly.",
-  },
-  "multimodal-looker": {
-    role: "visual and UI inspection",
-    description: "Inspect images, UI components, and frontend design tasks.",
-  },
-  Prometheus: {
-    role: "planner",
-    description: "Generates structured work plans and clarifying interview questions.",
-  },
-  Metis: {
-    role: "plan consultant",
-    description: "Reviews plans and identifies hidden requirements or failure points.",
-  },
-};
+import { AGENT_REGISTRY, getOhMyOpenCodeAgents, getAllFallbackChains } from "./agent-metadata.js";
 
-export const DEFAULT_FALLBACK_CHAINS = {
-  Sisyphus: ["anthropic", "github-copilot", "opencode", "antigravity", "google"],
-  oracle: ["openai", "anthropic", "google", "github-copilot", "opencode"],
-  librarian: ["opencode", "github-copilot", "anthropic"],
-  explore: ["anthropic", "opencode"],
-  "multimodal-looker": ["google", "openai", "zai-coding-plan", "anthropic", "opencode"],
-};
+/**
+ * @deprecated Import from agent-metadata.ts instead. Kept for backward compatibility.
+ */
+export const OH_MY_OPENCODE_AGENTS = getOhMyOpenCodeAgents();
+
+/**
+ * @deprecated Import from agent-metadata.ts instead. Kept for backward compatibility.
+ */
+export const DEFAULT_FALLBACK_CHAINS = getAllFallbackChains();
 
 export const CATEGORY_PARENT_FALLBACK = {
   "visual-engineering": ["google", "openai", "anthropic", "github-copilot", "opencode"],

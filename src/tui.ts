@@ -2,7 +2,7 @@
 export const tui = async (api: any, options?: any, meta?: any) => {
   const unregister = api.command.register(() => [
     {
-      title: "Open Agent Manager",
+      title: "Agent Manager",
       value: "/agent-manager",
       description: "Open the Agent Manager UI to inspect and manage agent configs.",
       category: "Agent Manager",

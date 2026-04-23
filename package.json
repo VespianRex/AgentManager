@@ -6,20 +6,21 @@
   "type": "module",
   "scripts": {
     "build": "bun run tsc -p tsconfig.json",
-    "install-plugin": "mkdir -p .opencode/plugins/agent-manager-built && rsync -a dist/ .opencode/plugins/agent-manager-built/",
     "deploy-plugin": "mkdir -p .opencode/plugins/agent-manager && rsync -a dist/ .opencode/plugins/agent-manager/",
-    "test": "sh -c 'find test -name \"*.test.ts\" -print0 | xargs -0 -n1 tsx'",
-    "smoke": "sh -c 'tsx test/smoke.test.ts'",
-    "e2e": "sh -c 'tsx test/e2e.test.ts'",
-    "lint": "tsx --help"
+    "install-plugin": "bun run build && bun run deploy-plugin",
+    "test": "bun test test/*.test.ts",
+    "smoke": "bun test test/smoke.test.ts",
+    "e2e": "bun test test/e2e.test.ts",
+    "lint": "bun --help"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "^1.4.3",
-    "comment-json": "^4.2.0"
+    "@opencode-ai/plugin": "^1.4.7",
+    "comment-json": "^4.2.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "tsx": "^4.9.0",
-    "typescript": "^5.5.0",
-    "@types/node": "^20.14.0"
+    "@types/node": "^20.14.0",
+    "bun-types": "^1.3.12",
+    "typescript": "^5.5.0"
   }
 }

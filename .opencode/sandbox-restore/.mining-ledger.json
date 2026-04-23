@@ -1,0 +1,523 @@
+{
+  "version": 2,
+  "last_run": "2026-04-01T23:59:00Z",
+  "total_runs": 2,
+  "stats": {
+    "total_sessions_in_db": 5186,
+    "total_sessions_ever_mined": 126,
+    "total_sessions_with_new_content": 13,
+    "total_findings_active": 4
+  },
+  "sessions": {
+    "ses_2d996f566ffeCYt4hzg1URwIWZ": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 10,
+      "current_message_count": 10,
+      "mined_message_ranges": [[1, 10]],
+      "project": "unknown",
+      "findings": ["SKILL-001"],
+      "has_new_content": false
+    },
+    "ses_2d996c1ebffewHQSNbmiPdiA6T": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 74,
+      "current_message_count": 74,
+      "mined_message_ranges": [[1, 74]],
+      "project": "unknown",
+      "findings": ["SKILL-001"],
+      "has_new_content": false
+    },
+    "ses_2d98abb15ffeHYk6YLrmTZkr2M": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 48,
+      "current_message_count": 48,
+      "mined_message_ranges": [[1, 48]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d985bbfcffe5pvREHS0y30zzS": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 6,
+      "current_message_count": 6,
+      "mined_message_ranges": [[1, 6]],
+      "project": "unknown",
+      "findings": ["SKILL-001"],
+      "has_new_content": false
+    },
+    "ses_2d9824285ffeA7GAllMKfj8xqj": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 29,
+      "current_message_count": 29,
+      "mined_message_ranges": [[1, 29]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d981878effeLkRXJdX6cSvY2v": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 28,
+      "current_message_count": 28,
+      "mined_message_ranges": [[1, 28]],
+      "project": "unknown",
+      "findings": ["SKILL-001"],
+      "has_new_content": false
+    },
+    "ses_2d9816fc0ffeWwLa0SCPmNfvMz": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 1204,
+      "current_message_count": 1204,
+      "mined_message_ranges": [[1, 1204]],
+      "project": "unknown",
+      "findings": ["SKILL-001"],
+      "has_new_content": false
+    },
+    "ses_2d9815c06ffeOs0qR1mA6C2FN2": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 6,
+      "current_message_count": 6,
+      "mined_message_ranges": [[1, 6]],
+      "project": "unknown",
+      "findings": ["SKILL-001"],
+      "has_new_content": false
+    },
+    "ses_2d9814b71ffeR5vTi0kn5PSzc3": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 26,
+      "current_message_count": 26,
+      "mined_message_ranges": [[1, 26]],
+      "project": "unknown",
+      "findings": ["SKILL-001"],
+      "has_new_content": false
+    },
+    "ses_2d98102daffegxVIotOioC3knn": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 5,
+      "current_message_count": 5,
+      "mined_message_ranges": [[1, 5]],
+      "project": "unknown",
+      "findings": ["SKILL-001"],
+      "has_new_content": false
+    },
+    "ses_2d8e4183affeDIRZjc0iTjhuQJ": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 44,
+      "current_message_count": 44,
+      "mined_message_ranges": [[1, 44]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d8e0f3a6ffe1QzT8UdSil8pfh": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 9,
+      "current_message_count": 9,
+      "mined_message_ranges": [[1, 9]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d81d03beffetRh9tzz0bDYIdP": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 46,
+      "current_message_count": 46,
+      "mined_message_ranges": [[1, 46]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d81d0369ffegUV1G2L0mHUUyt": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 12,
+      "current_message_count": 12,
+      "mined_message_ranges": [[1, 12]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d81bb5d8ffeGPK7PrrQxBZHly": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 13,
+      "current_message_count": 13,
+      "mined_message_ranges": [[1, 13]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d81ac4b1ffej2RT8MynAoJo4D": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 12,
+      "current_message_count": 12,
+      "mined_message_ranges": [[1, 12]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d81a9fa7ffeFYIoSStv9wpLck": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 10,
+      "current_message_count": 10,
+      "mined_message_ranges": [[1, 10]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d81a6a60ffe58Ln1VHW7oLEBA": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 9,
+      "current_message_count": 9,
+      "mined_message_ranges": [[1, 9]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d81a19bcffe4q4d33TvNWQWoo": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 12,
+      "current_message_count": 12,
+      "mined_message_ranges": [[1, 12]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d819e467ffeKpeDi40TAkzWqY": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 5,
+      "current_message_count": 5,
+      "mined_message_ranges": [[1, 5]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d819849fffepT59y92KbUEA7R": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 17,
+      "current_message_count": 17,
+      "mined_message_ranges": [[1, 17]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d8134c9dffevFwiJ3QVl8E25U": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 11,
+      "current_message_count": 11,
+      "mined_message_ranges": [[1, 11]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d812ab2effe9P5XfhXQf30m3t": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 10,
+      "current_message_count": 10,
+      "mined_message_ranges": [[1, 10]],
+      "project": "unknown",
+      "findings": ["SKILL-001", "MISTAKE-001"],
+      "has_new_content": false
+    },
+    "ses_2d81284caffe6V7mpl75Q7mJrl": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 19,
+      "current_message_count": 19,
+      "mined_message_ranges": [[1, 19]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d8127f8cfferT48z6VWVXtUmI": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 49,
+      "current_message_count": 49,
+      "mined_message_ranges": [[1, 49]],
+      "project": "unknown",
+      "findings": ["SKILL-001", "MISTAKE-001"],
+      "has_new_content": false
+    },
+    "ses_2d8125983ffeWQksDNiwSpCXsy": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 23,
+      "current_message_count": 23,
+      "mined_message_ranges": [[1, 23]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d81256ecffeY3NhdiXmshtdp1": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 16,
+      "current_message_count": 16,
+      "mined_message_ranges": [[1, 16]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d81250dbffeB3ylf1IaQ7aYJX": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 27,
+      "current_message_count": 27,
+      "mined_message_ranges": [[1, 27]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d770da1effeCREGHesagu4l5O": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 7,
+      "current_message_count": 7,
+      "mined_message_ranges": [[1, 7]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d79c1488ffebhhq3yk2k2mMbN": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 14,
+      "current_message_count": 14,
+      "mined_message_ranges": [[1, 14]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d79c2bdfffeaUkXNF19tjFays": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 16,
+      "current_message_count": 16,
+      "mined_message_ranges": [[1, 16]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d79c1e87ffeI65o8a8e7mILiu": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 13,
+      "current_message_count": 13,
+      "mined_message_ranges": [[1, 13]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d7a9bfb1ffe3J1c3HH0LGYUvu": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 24,
+      "current_message_count": 24,
+      "mined_message_ranges": [[1, 24]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d7a9edbbffeMo9JM5oM4Zw5zP": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 24,
+      "current_message_count": 24,
+      "mined_message_ranges": [[1, 24]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d7e2f399ffefAvFBivOXDleZC": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 23,
+      "current_message_count": 23,
+      "mined_message_ranges": [[1, 23]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d7e2e1eefferDIACqwlt2Kkba": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 15,
+      "current_message_count": 15,
+      "mined_message_ranges": [[1, 15]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d805605bffe2Dq9tT9uLFr61B": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 26,
+      "current_message_count": 26,
+      "mined_message_ranges": [[1, 26]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d8058598ffed7NZLVAr72enW7": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 17,
+      "current_message_count": 17,
+      "mined_message_ranges": [[1, 17]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d80572ebffedpB90EVTD9aMfN": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 12,
+      "current_message_count": 12,
+      "mined_message_ranges": [[1, 12]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d80714ceffemVLa69lVCgfsUZ": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 6,
+      "current_message_count": 6,
+      "mined_message_ranges": [[1, 6]],
+      "project": "unknown",
+      "findings": ["MISTAKE-001", "TOOL-001"],
+      "has_new_content": false
+    },
+    "ses_2d8157d3fffeAiuCzA18EKoHPj": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 21,
+      "current_message_count": 21,
+      "mined_message_ranges": [[1, 21]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d80aeddbffeYnswCupu3g854R": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 13,
+      "current_message_count": 13,
+      "mined_message_ranges": [[1, 13]],
+      "project": "unknown",
+      "findings": ["MISTAKE-001", "TOOL-001"],
+      "has_new_content": false
+    },
+    "ses_2d812191dffev4aTp3ef1C4p4w": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 34,
+      "current_message_count": 34,
+      "mined_message_ranges": [[1, 34]],
+      "project": "unknown",
+      "findings": ["MISTAKE-001", "TOOL-001"],
+      "has_new_content": false
+    },
+    "ses_2d8ca364dffeDkGso9byap9KBc": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 139,
+      "current_message_count": 139,
+      "mined_message_ranges": [[1, 139]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d886f606ffeLDg5DhVHpZVIrz": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 43,
+      "current_message_count": 43,
+      "mined_message_ranges": [[1, 43]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d88377bfffeAiDjKXy3oreM1h": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 28,
+      "current_message_count": 28,
+      "mined_message_ranges": [[1, 28]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d884d3bcffe15Xfpct0xGup2p": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 20,
+      "current_message_count": 20,
+      "mined_message_ranges": [[1, 20]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d89dd8bcfferSx7Zi7djqLY2g": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 12,
+      "current_message_count": 12,
+      "mined_message_ranges": [[1, 12]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d89da0efffeT2H10i9dzSZZEc": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 7,
+      "current_message_count": 7,
+      "mined_message_ranges": [[1, 7]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d89dc980ffeYC6PIFWg3SBgyt": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 7,
+      "current_message_count": 7,
+      "mined_message_ranges": [[1, 7]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    },
+    "ses_2d89db561ffe2dg44B1I2LWdZn": {
+      "first_mined_at": "2026-04-01T23:59:00Z",
+      "last_mined_at": "2026-04-01T23:59:00Z",
+      "message_count_at_mining": 6,
+      "current_message_count": 6,
+      "mined_message_ranges": [[1, 6]],
+      "project": "unknown",
+      "findings": [],
+      "has_new_content": false
+    }
+  }
+}

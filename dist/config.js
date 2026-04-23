@@ -9,9 +9,24 @@ export const CONFIG_LOCATIONS = [
 ];
 export const normalizePath = (filePath, cwd) => {
     if (filePath.startsWith("~")) {
-        return path.join(process.env.HOME ?? "/", filePath.slice(1));
+        const home = process.env.HOME ?? "/";
+        // Remove the ~ and any leading slashes to get relative path
+        const relativePart = filePath.slice(1).replace(/^[\/\\]+/, '');
+        // Resolve the full path
+        const resolved = path.resolve(home, relativePart);
+        // Security check: ensure resolved path is within home directory
+        // Prevents path traversal attacks like ~/../../../etc/passwd
+        if (!resolved.startsWith(home + path.sep) && resolved !== home) {
+            throw new Error("Path resolves outside home directory");
+        }
+        return resolved;
     }
-    return path.isAbsolute(filePath) ? filePath : path.join(cwd, filePath);
+    // For absolute paths, return as-is
+    if (path.isAbsolute(filePath)) {
+        return filePath;
+    }
+    // For relative paths, resolve against cwd
+    return path.resolve(cwd, filePath);
 };
 export const readJsoncFile = async (filePath) => {
     const raw = await fs.readFile(filePath, "utf8");

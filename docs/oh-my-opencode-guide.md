@@ -6,6 +6,7 @@ This document captures the key configuration concepts for Oh My OpenCode.
 
 - Project-specific: `.opencode/oh-my-opencode.json`
 - User-specific: `~/.config/opencode/oh-my-opencode.json`
+- Generic project config: `opencode.json` or `.opencode/package.json`
 
 ## Important sections
 

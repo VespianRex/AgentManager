@@ -1,5 +1,5 @@
-import { describe, it } from "node:test";
-import assert from "node:assert";
+import { describe, it } from "bun:test";
+import assert from "bun:assert";
 import { getSystemOverview, getOrchestrationDiagram, getFallbackDiagram } from "../src/agentSystem.js";
 describe("agent system metadata", () => {
     it("provides a system overview with agents and fallback chains", () => {
