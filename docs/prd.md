@@ -2,7 +2,7 @@
 
 ## Overview
 
-The OpenCode Agent Manager plugin is a local OpenCode extension that helps users inspect, understand, and modify OpenCode agent and Oh My OpenCode settings. It will provide a terminal-first configuration experience, built-in documentation, and support for subagent orchestration.
+The OpenCode Agent Manager plugin is a local OpenCode extension that helps users inspect, understand, and modify OpenCode agent and Oh My OpenCode settings. It will provide a menu-based entry that is discoverable from OpenCode's command palette / quick-open (e.g., Ctrl+P on Windows/Linux or Cmd+P on macOS) to open the Agent Manager UI, in addition to a terminal-first configuration experience (TUI), built-in documentation, and support for subagent orchestration.
 
 ## Goals
 
@@ -40,3 +40,15 @@ The OpenCode Agent Manager plugin is a local OpenCode extension that helps users
 - Uses plain text and ASCII diagrams for terminal readability.
 - Avoids destructive edits by backing up configs first.
 - Supports both project-local and user-level config files.
+
+## Tooling & Build
+
+- Use Bun exclusively for development, testing and builds.
+- Recommended commands for developers:
+  - `bun install` — install dependencies
+  - `bun run build` — compile TypeScript to `dist/`
+  - `bun run install-plugin` — stage compiled plugin to `.opencode/plugins/agent-manager-built`
+  - `bun run deploy-plugin` — deploy plugin to `.opencode/plugins/agent-manager`
+  - `bun run test` — run the test suite
+
+Note: The plugin should not override host keybindings; document recommended shortcuts in the README and let users bind their preferred keys in OpenCode.

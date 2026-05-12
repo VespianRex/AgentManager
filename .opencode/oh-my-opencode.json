@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+
+  "agents": {
+    "performance-engineer": {
+      "fallback_models": ["openai", "anthropic", "google", "github-copilot", "opencode"],
+      "mode": "subagent",
+      "description": "Performance analysis and scalability assessment"
+    },
+    "test-automator": {
+      "fallback_models": ["anthropic", "github-copilot", "opencode", "antigravity", "google"],
+      "mode": "subagent",
+      "description": "Test coverage analysis and test automation"
+    },
+    "tdd-orchestrator": {
+      "fallback_models": ["openai", "anthropic", "google", "github-copilot", "opencode"],
+      "mode": "subagent",
+      "description": "TDD workflow orchestration and enforcement"
+    }
+  }
+}

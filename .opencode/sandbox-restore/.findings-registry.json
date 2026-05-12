@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "findings": {
+    "SKILL-001": {
+      "id": "SKILL-001",
+      "type": "skill",
+      "name": "Ultrawork Mode Protocol",
+      "sessions": [
+        "ses_2d996f566ffeCYt4hzg1URwIWZ",
+        "ses_2d996c1ebffewHQSNbmiPdiA6T",
+        "ses_2d98abb15ffeHYk6YLrmTZkr2M",
+        "ses_2d985bbfcffe5pvREHS0y30zzS",
+        "ses_2d9824285ffeA7GAllMKfj8xqj",
+        "ses_2d981878effeLkRXJdX6cSvY2v",
+        "ses_2d9816fc0ffeWwLa0SCPmNfvMz",
+        "ses_2d9815c06ffeOs0qR1mA6C2FN2",
+        "ses_2d9814b71ffeR5vTi0kn5PSzc3",
+        "ses_2d98102daffegxVIotOioC3knn"
+      ],
+      "projects": ["unknown"],
+      "first_seen": "2026-04-01T23:59:00Z",
+      "last_seen": "2026-04-01T23:59:00Z",
+      "date_range": "2026-04-01 → 2026-04-01",
+      "last_enriched": "2026-04-01T23:59:00Z",
+      "status": "active",
+      "confidence": "high",
+      "enriched_by_runs": [2],
+      "tags": ["SYSTEM", "protocol", "methodology"]
+    },
+    "SKILL-002": {
+      "id": "SKILL-002",
+      "type": "skill",
+      "name": "Model Configuration Audit",
+      "sessions": [
+        "multiple_sessions_from_wave1"
+      ],
+      "projects": ["unknown"],
+      "first_seen": "2026-04-01T23:59:00Z",
+      "last_seen": "2026-04-01T23:59:00Z",
+      "date_range": "2026-04-01 → 2026-04-01",
+      "last_enriched": "2026-04-01T23:59:00Z",
+      "status": "active",
+      "confidence": "high",
+      "enriched_by_runs": [2],
+      "tags": ["CONFIG", "audit", "models"]
+    },
+    "MISTAKE-001": {
+      "id": "MISTAKE-001",
+      "type": "mistake",
+      "name": "Implementation Challenges",
+      "sessions": [
+        "ses_2d812ab2effe9P5XfhXQf30m3t",
+        "ses_2d8127f8cfferT48z6VWVXtUmI",
+        "ses_2d80714ceffemVLa69lVCgfsUZ",
+        "ses_2d80aeddbffeYnswCupu3g854R",
+        "ses_2d812191dffev4aTp3ef1C4p4w"
+      ],
+      "projects": ["unknown"],
+      "first_seen": "2026-04-01T23:59:00Z",
+      "last_seen": "2026-04-01T23:59:00Z",
+      "date_range": "2026-04-01 → 2026-04-01",
+      "last_enriched": "2026-04-01T23:59:00Z",
+      "status": "active",
+      "confidence": "medium",
+      "enriched_by_runs": [2],
+      "tags": ["MISTAKE", "implementation", "pitfalls"]
+    },
+    "COMMAND-001": {
+      "id": "COMMAND-001",
+      "type": "command",
+      "name": "Task Master AI CLI",
+      "sessions": [
+        "multiple_sessions_from_wave1"
+      ],
+      "projects": ["unknown"],
+      "first_seen": "2026-04-01T23:59:00Z",
+      "last_seen": "2026-04-01T23:59:00Z",
+      "date_range": "2026-04-01 → 2026-04-01",
+      "last_enriched": "2026-04-01T23:59:00Z",
+      "status": "active",
+      "confidence": "high",
+      "enriched_by_runs": [2],
+      "tags": ["COMMAND", "task-management", "prd"]
+    },
+    "TOOL-001": {
+      "id": "TOOL-001",
+      "type": "tool",
+      "name": "Programmatic Logic for Custom Tools",
+      "sessions": [
+        "ses_2d80714ceffemVLa69lVCgfsUZ",
+        "ses_2d80aeddbffeYnswCupu3g854R",
+        "ses_2d812191dffev4aTp3ef1C4p4w"
+      ],
+      "projects": ["unknown"],
+      "first_seen": "2026-04-01T23:59:00Z",
+      "last_seen": "2026-04-01T23:59:00Z",
+      "date_range": "2026-04-01 → 2026-04-01",
+      "last_enriched": "2026-04-01T23:59:00Z",
+      "status": "active",
+      "confidence": "medium",
+      "enriched_by_runs": [2],
+      "tags": ["TOOL", "programmatic", "reusable"]
+    }
+  }
+}

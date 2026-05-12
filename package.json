@@ -1,0 +1,35 @@
+{
+  "name": "opencode-agent-manager",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "bun@1.2.22",
+  "type": "module",
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && bun run tsc -p tsconfig.json",
+    "deploy-plugin": "rm -rf .opencode/plugins/agent-manager && mkdir -p .opencode/plugins/agent-manager && rm -f .opencode/plugins/agent-manager.js && printf 'export { server } from \"./agent-manager/index.js\";\\n' > .opencode/plugins/agent-manager.js && cp -R dist/. .opencode/plugins/agent-manager/",
+    "install-plugin": "bun run build && bun run deploy-plugin",
+    "install-tdd-hooks": "bun scripts/install-tdd-hooks.mjs",
+    "test": "bun test --timeout 120000 --workers 4 test/*.test.ts",
+    "test:cache": "bun test --timeout 120000 --workers 2 test/config-cache-*.test.ts test/00-config-cache.test.ts",
+    "test:concurrency": "bun test --timeout 180000 --workers 1 test/config-cache-concurrency.test.ts",
+    "smoke": "bun test --timeout 30000 test/smoke.test.ts",
+    "e2e": "bun test --timeout 120000 --workers 1 test/e2e.test.ts",
+    "lint": "bun run tsc -p tsconfig.json --noEmit",
+    "ci": "bun run build && bun run deploy-plugin && bun run smoke",
+    "audit": "bunx npm audit",
+    "audit:ci": "bunx npm audit && bun test test/dependency-audit.test.ts"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.14.48",
+    "@opentui/solid": "^0.2.7",
+    "comment-json": "^5.0.0",
+    "solid-js": "^1.9.12",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.30",
+    "bun-types": "^1.3.13",
+    "diff": "9.0.0",
+    "typescript": "^5.5.4"
+  }
+}

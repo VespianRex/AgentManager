@@ -9,7 +9,8 @@
 
 ## Core components
 
-- **Plugin entrypoint**: `.opencode/plugins/agent-manager.ts`
+- **Plugin entrypoint**: `.opencode/plugins/agent-manager.js`, which loads the runtime bundle in `.opencode/plugins/agent-manager/`
+- **TUI command**: global `command.agent-manager` in `~/.config/opencode/opencode.json`
 - **Types and helpers**: `.opencode/plugins/agent-manager.types.ts`
 - **Documentation**: `docs/` folder with guides and diagrams
 - **Examples**: sample config templates in `examples/`
@@ -30,3 +31,15 @@ The plugin will search these locations:
 - User config: `~/.config/opencode/oh-my-opencode.json`, `~/.config/opencode/opencode.json`
 
 It will preserve JSONC comments and create backups before writing.
+
+## Subagent orchestration and context management
+
+The plugin uses a lightweight subagent pipeline to inspect and validate configuration with explicit context passing.
+
+- **ConfigDiscovery** receives the raw config document and returns a summary of agents and categories.
+- **SystemExplanation** adds an overview of Oh My OpenCode roles and fallback provider chains.
+- **ConfigValidation** checks permission values, hook names, and whether the config follows expected OpenCode patterns.
+- **OrchestrationReview** inspects `sisyphus_agent` and `background_task` configuration to verify subagent orchestration settings.
+- **InstructionFollowReview** detects repeated `prompt_append` usage and issues DRY/KISS guidance.
+
+The plugin treats these checks as separate subagent tasks, ensuring each stage receives only the relevant context for that audit.

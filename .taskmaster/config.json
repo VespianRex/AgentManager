@@ -1,0 +1,79 @@
+{
+  "models": {
+    "main": {
+      "0": "c",
+      "1": "l",
+      "2": "a",
+      "3": "u",
+      "4": "d",
+      "5": "e",
+      "6": "-",
+      "7": "3",
+      "8": "-",
+      "9": "5",
+      "10": "-",
+      "11": "s",
+      "12": "o",
+      "13": "n",
+      "14": "n",
+      "15": "e",
+      "16": "t",
+      "17": "-",
+      "18": "2",
+      "19": "0",
+      "20": "2",
+      "21": "4",
+      "22": "1",
+      "23": "0",
+      "24": "2",
+      "25": "2",
+      "provider": "anthropic",
+      "modelId": "claude-sonnet-4-20250514",
+      "maxTokens": 64000,
+      "temperature": 0.2
+    },
+    "research": {
+      "0": "s",
+      "1": "o",
+      "2": "n",
+      "3": "a",
+      "4": "r",
+      "5": "-",
+      "6": "p",
+      "7": "r",
+      "8": "o",
+      "provider": "perplexity",
+      "modelId": "sonar",
+      "maxTokens": 8700,
+      "temperature": 0.1
+    },
+    "fallback": {
+      "provider": "anthropic",
+      "modelId": "claude-3-7-sonnet-20250219",
+      "maxTokens": 120000,
+      "temperature": 0.2
+    }
+  },
+  "global": {
+    "logLevel": "info",
+    "debug": false,
+    "defaultNumTasks": 10,
+    "defaultSubtasks": 5,
+    "defaultPriority": "medium",
+    "projectName": "Task Master",
+    "ollamaBaseURL": "http://localhost:11434/api",
+    "bedrockBaseURL": "https://bedrock.us-east-1.amazonaws.com",
+    "responseLanguage": "English",
+    "enableCodebaseAnalysis": true,
+    "enableProxy": false,
+    "anonymousTelemetry": true,
+    "userId": "1234567890"
+  },
+  "claudeCode": {},
+  "codexCli": {},
+  "grokCli": {
+    "timeout": 120000,
+    "workingDirectory": null,
+    "defaultModel": "grok-4-latest"
+  }
+}

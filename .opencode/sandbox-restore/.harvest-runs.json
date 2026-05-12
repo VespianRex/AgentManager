@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "runs": [
+    {
+      "run_id": 1,
+      "date": "2026-04-01T06:00:00Z",
+      "sessions_processed": 75,
+      "findings_created": 29,
+      "sessions_with_new_content": 0,
+      "notes": "Initial run from ledger"
+    },
+    {
+      "run_id": 2,
+      "date": "2026-04-01T23:59:00Z",
+      "sessions_processed": 51,
+      "findings_created": 5,
+      "sessions_with_new_content": 13,
+      "findings_delta": {
+        "new": ["SKILL-001", "SKILL-002", "MISTAKE-001", "COMMAND-001", "TOOL-001"],
+        "enriched": [],
+        "merged": [],
+        "deprecated": []
+      },
+      "notes": "Wave 1 processing of 51 new sessions"
+    }
+  ]
+}

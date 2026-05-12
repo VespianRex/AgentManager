@@ -1,0 +1,1132 @@
+- generic [ref=e2]:
+  - region
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - link "Homepage" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+        - generic [ref=e13]:
+          - navigation "Global" [ref=e16]:
+            - list [ref=e17]:
+              - listitem [ref=e18]:
+                - button "Platform" [ref=e20] [cursor=pointer]:
+                  - text: Platform
+                  - img [ref=e21]
+              - listitem [ref=e23]:
+                - button "Solutions" [ref=e25] [cursor=pointer]:
+                  - text: Solutions
+                  - img [ref=e26]
+              - listitem [ref=e28]:
+                - button "Resources" [ref=e30] [cursor=pointer]:
+                  - text: Resources
+                  - img [ref=e31]
+              - listitem [ref=e33]:
+                - button "Open Source" [ref=e35] [cursor=pointer]:
+                  - text: Open Source
+                  - img [ref=e36]
+              - listitem [ref=e38]:
+                - button "Enterprise" [ref=e40] [cursor=pointer]:
+                  - text: Enterprise
+                  - img [ref=e41]
+              - listitem [ref=e43]:
+                - link "Pricing" [ref=e44] [cursor=pointer]:
+                  - /url: https://github.com/pricing
+                  - generic [ref=e45]: Pricing
+          - generic [ref=e46]:
+            - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+              - img [ref=e51]
+            - link "Sign in" [ref=e54] [cursor=pointer]:
+              - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fanomalyco%2Fopencode
+            - link "Sign up" [ref=e55] [cursor=pointer]:
+              - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=anomalyco%2Fopencode
+            - button "Appearance settings" [ref=e58] [cursor=pointer]:
+              - img
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e66]:
+          - img [ref=e67]
+          - link "anomalyco" [ref=e70] [cursor=pointer]:
+            - /url: /anomalyco
+          - generic [ref=e71]: /
+          - strong [ref=e72]:
+            - link "opencode" [ref=e73] [cursor=pointer]:
+              - /url: /anomalyco/opencode
+          - generic [ref=e74]: Public
+        - generic [ref=e75]:
+          - list:
+            - listitem [ref=e76]:
+              - link "You must be signed in to change notification settings" [ref=e77] [cursor=pointer]:
+                - /url: /login?return_to=%2Fanomalyco%2Fopencode
+                - img [ref=e78]
+                - text: Notifications
+            - listitem [ref=e80]:
+              - link "Fork 16k" [ref=e81] [cursor=pointer]:
+                - /url: /login?return_to=%2Fanomalyco%2Fopencode
+                - img [ref=e82]
+                - text: Fork
+                - generic "15,952" [ref=e84]: 16k
+            - listitem [ref=e85]:
+              - link "You must be signed in to star a repository" [ref=e87] [cursor=pointer]:
+                - /url: /login?return_to=%2Fanomalyco%2Fopencode
+                - img [ref=e88]
+                - text: Star
+                - generic "142084 users starred this repository" [ref=e90]: 142k
+      - navigation "Repository" [ref=e91]:
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - link "Code" [ref=e94] [cursor=pointer]:
+              - /url: /anomalyco/opencode
+              - img [ref=e95]
+              - generic [ref=e97]: Code
+          - listitem [ref=e98]:
+            - link "Issues 4.4k" [ref=e99] [cursor=pointer]:
+              - /url: /anomalyco/opencode/issues
+              - img [ref=e100]
+              - generic [ref=e103]: Issues
+              - generic "4,382" [ref=e104]: 4.4k
+          - listitem [ref=e105]:
+            - link "Pull requests 1.8k" [ref=e106] [cursor=pointer]:
+              - /url: /anomalyco/opencode/pulls
+              - img [ref=e107]
+              - generic [ref=e109]: Pull requests
+              - generic "1,793" [ref=e110]: 1.8k
+          - listitem [ref=e111]:
+            - link "Actions" [ref=e112] [cursor=pointer]:
+              - /url: /anomalyco/opencode/actions
+              - img [ref=e113]
+              - generic [ref=e115]: Actions
+          - listitem [ref=e116]:
+            - link "Projects" [ref=e117] [cursor=pointer]:
+              - /url: /anomalyco/opencode/projects
+              - img [ref=e118]
+              - generic [ref=e120]: Projects
+          - listitem [ref=e121]:
+            - link "Security and quality 2" [ref=e122] [cursor=pointer]:
+              - /url: /anomalyco/opencode/security
+              - img [ref=e123]
+              - generic [ref=e125]: Security and quality
+              - generic "2" [ref=e126]
+          - listitem [ref=e127]:
+            - link "Insights" [ref=e128] [cursor=pointer]:
+              - /url: /anomalyco/opencode/pulse
+              - img [ref=e129]
+              - generic [ref=e131]: Insights
+    - generic [ref=e144]:
+      - heading "anomalyco/opencode" [level=1] [ref=e146]
+      - generic [ref=e147]:
+        - generic [ref=e150]:
+          - generic [ref=e151]:
+            - generic [ref=e152]:
+              - button "dev branch" [ref=e154] [cursor=pointer]:
+                - generic [ref=e155]:
+                  - generic [ref=e157]:
+                    - img [ref=e159]
+                    - generic [ref=e162]: dev
+                  - generic:
+                    - img
+              - generic [ref=e163]:
+                - link "308 Branches" [ref=e164] [cursor=pointer]:
+                  - /url: /anomalyco/opencode/branches
+                  - generic [ref=e165]:
+                    - generic:
+                      - img
+                    - generic [ref=e167]:
+                      - strong [ref=e168]: "308"
+                      - text: Branches
+                - link "976 Tags" [ref=e169] [cursor=pointer]:
+                  - /url: /anomalyco/opencode/tags
+                  - generic [ref=e170]:
+                    - generic:
+                      - img
+                    - generic [ref=e172]:
+                      - strong [ref=e173]: "976"
+                      - text: Tags
+            - generic [ref=e174]:
+              - generic [ref=e178]:
+                - img [ref=e180]
+                - combobox "Go to file" [ref=e182]
+              - button "Code" [ref=e183] [cursor=pointer]:
+                - generic [ref=e184]:
+                  - generic:
+                    - img
+                  - generic [ref=e185]: Code
+                  - generic:
+                    - img
+          - generic [ref=e186]:
+            - generic [ref=e187]:
+              - heading "Folders and files" [level=2] [ref=e188]
+              - table "Folders and files" [ref=e189]:
+                - rowgroup:
+                  - row "Name Last commit message Last commit date":
+                    - columnheader "Name"
+                    - columnheader "Last commit message":
+                      - generic "Last commit message"
+                    - columnheader "Last commit date":
+                      - generic "Last commit date"
+                - rowgroup [ref=e190]:
+                  - row "Latest commit History 11,089 Commits" [ref=e191]:
+                    - cell "Latest commit History 11,089 Commits" [ref=e192]:
+                      - generic [ref=e193]:
+                        - heading "Latest commit" [level=2] [ref=e194]
+                        - generic [ref=e197]:
+                          - heading "History" [level=2] [ref=e198]
+                          - link "11,089 Commits" [ref=e199] [cursor=pointer]:
+                            - /url: /anomalyco/opencode/commits/dev/
+                            - generic [ref=e200]:
+                              - generic:
+                                - img
+                              - generic [ref=e201]: 11,089 Commits
+                  - row ".github, (Directory)" [ref=e202]:
+                    - cell ".github, (Directory)" [ref=e203]:
+                      - generic [ref=e204]:
+                        - img [ref=e205]
+                        - link ".github, (Directory)" [ref=e210] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/.github
+                          - text: .github
+                    - cell [ref=e211]
+                    - cell [ref=e213]
+                  - row ".husky, (Directory)" [ref=e216]:
+                    - cell ".husky, (Directory)" [ref=e217]:
+                      - generic [ref=e218]:
+                        - img [ref=e219]
+                        - link ".husky, (Directory)" [ref=e224] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/.husky
+                          - text: .husky
+                    - cell [ref=e225]
+                    - cell [ref=e227]
+                  - row ".opencode, (Directory)" [ref=e230]:
+                    - cell ".opencode, (Directory)" [ref=e231]:
+                      - generic [ref=e232]:
+                        - img [ref=e233]
+                        - link ".opencode, (Directory)" [ref=e238] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/.opencode
+                          - text: .opencode
+                    - cell [ref=e239]
+                    - cell [ref=e241]
+                  - row ".vscode, (Directory)" [ref=e244]:
+                    - cell ".vscode, (Directory)" [ref=e245]:
+                      - generic [ref=e246]:
+                        - img [ref=e247]
+                        - link ".vscode, (Directory)" [ref=e252] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/.vscode
+                          - text: .vscode
+                    - cell [ref=e253]
+                    - cell [ref=e255]
+                  - row ".zed, (Directory)" [ref=e258]:
+                    - cell ".zed, (Directory)" [ref=e259]:
+                      - generic [ref=e260]:
+                        - img [ref=e261]
+                        - link ".zed, (Directory)" [ref=e266] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/.zed
+                          - text: .zed
+                    - cell [ref=e267]
+                    - cell [ref=e269]
+                  - row "github, (Directory)" [ref=e272]:
+                    - cell "github, (Directory)" [ref=e273]:
+                      - generic [ref=e274]:
+                        - img [ref=e275]
+                        - link "github, (Directory)" [ref=e280] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/github
+                          - text: github
+                    - cell [ref=e281]
+                    - cell [ref=e283]
+                  - row "infra, (Directory)" [ref=e286]:
+                    - cell "infra, (Directory)" [ref=e287]:
+                      - generic [ref=e288]:
+                        - img [ref=e289]
+                        - link "infra, (Directory)" [ref=e294] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/infra
+                          - text: infra
+                    - cell [ref=e295]
+                    - cell [ref=e297]
+                  - row "nix, (Directory)" [ref=e300]:
+                    - cell "nix, (Directory)" [ref=e301]:
+                      - generic [ref=e302]:
+                        - img [ref=e303]
+                        - link "nix, (Directory)" [ref=e308] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/nix
+                          - text: nix
+                    - cell [ref=e309]
+                    - cell [ref=e311]
+                  - row "packages, (Directory)" [ref=e314]:
+                    - cell "packages, (Directory)" [ref=e315]:
+                      - generic [ref=e316]:
+                        - img [ref=e317]
+                        - link "packages, (Directory)" [ref=e322] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/packages
+                          - text: packages
+                    - cell [ref=e323]
+                    - cell [ref=e325]
+                  - row "patches, (Directory)" [ref=e328]:
+                    - cell "patches, (Directory)" [ref=e329]:
+                      - generic [ref=e330]:
+                        - img [ref=e331]
+                        - link "patches, (Directory)" [ref=e336] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/patches
+                          - text: patches
+                    - cell [ref=e337]
+                    - cell [ref=e339]
+                  - row "script, (Directory)" [ref=e342]:
+                    - cell "script, (Directory)" [ref=e343]:
+                      - generic [ref=e344]:
+                        - img [ref=e345]
+                        - link "script, (Directory)" [ref=e350] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/script
+                          - text: script
+                    - cell [ref=e351]
+                    - cell [ref=e353]
+                  - row "sdks/vscode, (Directory)" [ref=e356]:
+                    - cell "sdks/vscode, (Directory)" [ref=e357]:
+                      - generic [ref=e358]:
+                        - img [ref=e359]
+                        - link "sdks/vscode, (Directory)" [ref=e364] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/sdks/vscode
+                          - text: sdks/vscode
+                    - cell [ref=e365]
+                    - cell [ref=e367]
+                  - row "specs, (Directory)" [ref=e370]:
+                    - cell "specs, (Directory)" [ref=e371]:
+                      - generic [ref=e372]:
+                        - img [ref=e373]
+                        - link "specs, (Directory)" [ref=e378] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/tree/dev/specs
+                          - text: specs
+                    - cell [ref=e379]
+                    - cell [ref=e381]
+                  - row ".editorconfig, (File)" [ref=e384]:
+                    - cell ".editorconfig, (File)" [ref=e385]:
+                      - generic [ref=e386]:
+                        - img [ref=e387]
+                        - link ".editorconfig, (File)" [ref=e392] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/.editorconfig
+                          - text: .editorconfig
+                    - cell [ref=e393]
+                    - cell [ref=e395]
+                  - row ".gitignore, (File)" [ref=e398]:
+                    - cell ".gitignore, (File)" [ref=e399]:
+                      - generic [ref=e400]:
+                        - img [ref=e401]
+                        - link ".gitignore, (File)" [ref=e406] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/.gitignore
+                          - text: .gitignore
+                    - cell [ref=e407]
+                    - cell [ref=e409]
+                  - row ".prettierignore, (File)" [ref=e412]:
+                    - cell ".prettierignore, (File)" [ref=e413]:
+                      - generic [ref=e414]:
+                        - img [ref=e415]
+                        - link ".prettierignore, (File)" [ref=e420] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/.prettierignore
+                          - text: .prettierignore
+                    - cell [ref=e421]
+                    - cell [ref=e423]
+                  - row "AGENTS.md, (File)" [ref=e426]:
+                    - cell "AGENTS.md, (File)" [ref=e427]:
+                      - generic [ref=e428]:
+                        - img [ref=e429]
+                        - link "AGENTS.md, (File)" [ref=e434] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/AGENTS.md
+                          - text: AGENTS.md
+                    - cell [ref=e435]
+                    - cell [ref=e437]
+                  - row "CONTRIBUTING.md, (File)" [ref=e440]:
+                    - cell "CONTRIBUTING.md, (File)" [ref=e441]:
+                      - generic [ref=e442]:
+                        - img [ref=e443]
+                        - link "CONTRIBUTING.md, (File)" [ref=e448] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/CONTRIBUTING.md
+                          - text: CONTRIBUTING.md
+                    - cell [ref=e449]
+                    - cell [ref=e451]
+                  - row "LICENSE, (File)" [ref=e454]:
+                    - cell "LICENSE, (File)" [ref=e455]:
+                      - generic [ref=e456]:
+                        - img [ref=e457]
+                        - link "LICENSE, (File)" [ref=e462] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/LICENSE
+                          - text: LICENSE
+                    - cell [ref=e463]
+                    - cell [ref=e465]
+                  - row "README.ar.md, (File)" [ref=e468]:
+                    - cell "README.ar.md, (File)" [ref=e469]:
+                      - generic [ref=e470]:
+                        - img [ref=e471]
+                        - link "README.ar.md, (File)" [ref=e476] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.ar.md
+                          - text: README.ar.md
+                    - cell [ref=e477]
+                    - cell [ref=e479]
+                  - row "README.bn.md, (File)" [ref=e482]:
+                    - cell "README.bn.md, (File)" [ref=e483]:
+                      - generic [ref=e484]:
+                        - img [ref=e485]
+                        - link "README.bn.md, (File)" [ref=e490] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.bn.md
+                          - text: README.bn.md
+                    - cell [ref=e491]
+                    - cell [ref=e493]
+                  - row "README.br.md, (File)" [ref=e496]:
+                    - cell "README.br.md, (File)" [ref=e497]:
+                      - generic [ref=e498]:
+                        - img [ref=e499]
+                        - link "README.br.md, (File)" [ref=e504] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.br.md
+                          - text: README.br.md
+                    - cell [ref=e505]
+                    - cell [ref=e507]
+                  - row "README.bs.md, (File)" [ref=e510]:
+                    - cell "README.bs.md, (File)" [ref=e511]:
+                      - generic [ref=e512]:
+                        - img [ref=e513]
+                        - link "README.bs.md, (File)" [ref=e518] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.bs.md
+                          - text: README.bs.md
+                    - cell [ref=e519]
+                    - cell [ref=e521]
+                  - row "README.da.md, (File)" [ref=e524]:
+                    - cell "README.da.md, (File)" [ref=e525]:
+                      - generic [ref=e526]:
+                        - img [ref=e527]
+                        - link "README.da.md, (File)" [ref=e532] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.da.md
+                          - text: README.da.md
+                    - cell [ref=e533]
+                    - cell [ref=e535]
+                  - row "README.de.md, (File)" [ref=e538]:
+                    - cell "README.de.md, (File)" [ref=e539]:
+                      - generic [ref=e540]:
+                        - img [ref=e541]
+                        - link "README.de.md, (File)" [ref=e546] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.de.md
+                          - text: README.de.md
+                    - cell [ref=e547]
+                    - cell [ref=e549]
+                  - row "README.es.md, (File)" [ref=e552]:
+                    - cell "README.es.md, (File)" [ref=e553]:
+                      - generic [ref=e554]:
+                        - img [ref=e555]
+                        - link "README.es.md, (File)" [ref=e560] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.es.md
+                          - text: README.es.md
+                    - cell [ref=e561]
+                    - cell [ref=e563]
+                  - row "README.fr.md, (File)" [ref=e566]:
+                    - cell "README.fr.md, (File)" [ref=e567]:
+                      - generic [ref=e568]:
+                        - img [ref=e569]
+                        - link "README.fr.md, (File)" [ref=e574] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.fr.md
+                          - text: README.fr.md
+                    - cell [ref=e575]
+                    - cell [ref=e577]
+                  - row "README.gr.md, (File)" [ref=e580]:
+                    - cell "README.gr.md, (File)" [ref=e581]:
+                      - generic [ref=e582]:
+                        - img [ref=e583]
+                        - link "README.gr.md, (File)" [ref=e588] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.gr.md
+                          - text: README.gr.md
+                    - cell [ref=e589]
+                    - cell [ref=e591]
+                  - row "README.it.md, (File)" [ref=e594]:
+                    - cell "README.it.md, (File)" [ref=e595]:
+                      - generic [ref=e596]:
+                        - img [ref=e597]
+                        - link "README.it.md, (File)" [ref=e602] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.it.md
+                          - text: README.it.md
+                    - cell [ref=e603]
+                    - cell [ref=e605]
+                  - row "README.ja.md, (File)" [ref=e608]:
+                    - cell "README.ja.md, (File)" [ref=e609]:
+                      - generic [ref=e610]:
+                        - img [ref=e611]
+                        - link "README.ja.md, (File)" [ref=e616] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.ja.md
+                          - text: README.ja.md
+                    - cell [ref=e617]
+                    - cell [ref=e619]
+                  - row "README.ko.md, (File)" [ref=e622]:
+                    - cell "README.ko.md, (File)" [ref=e623]:
+                      - generic [ref=e624]:
+                        - img [ref=e625]
+                        - link "README.ko.md, (File)" [ref=e630] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.ko.md
+                          - text: README.ko.md
+                    - cell [ref=e631]
+                    - cell [ref=e633]
+                  - row "README.md, (File)" [ref=e636]:
+                    - cell "README.md, (File)" [ref=e637]:
+                      - generic [ref=e638]:
+                        - img [ref=e639]
+                        - link "README.md, (File)" [ref=e644] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.md
+                          - text: README.md
+                    - cell [ref=e645]
+                    - cell [ref=e647]
+                  - row "README.no.md, (File)" [ref=e650]:
+                    - cell "README.no.md, (File)" [ref=e651]:
+                      - generic [ref=e652]:
+                        - img [ref=e653]
+                        - link "README.no.md, (File)" [ref=e658] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.no.md
+                          - text: README.no.md
+                    - cell [ref=e659]
+                    - cell [ref=e661]
+                  - row "README.pl.md, (File)" [ref=e664]:
+                    - cell "README.pl.md, (File)" [ref=e665]:
+                      - generic [ref=e666]:
+                        - img [ref=e667]
+                        - link "README.pl.md, (File)" [ref=e672] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.pl.md
+                          - text: README.pl.md
+                    - cell [ref=e673]
+                    - cell [ref=e675]
+                  - row "README.ru.md, (File)" [ref=e678]:
+                    - cell "README.ru.md, (File)" [ref=e679]:
+                      - generic [ref=e680]:
+                        - img [ref=e681]
+                        - link "README.ru.md, (File)" [ref=e686] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.ru.md
+                          - text: README.ru.md
+                    - cell [ref=e687]
+                    - cell [ref=e689]
+                  - row "README.th.md, (File)" [ref=e692]:
+                    - cell "README.th.md, (File)" [ref=e693]:
+                      - generic [ref=e694]:
+                        - img [ref=e695]
+                        - link "README.th.md, (File)" [ref=e700] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.th.md
+                          - text: README.th.md
+                    - cell [ref=e701]
+                    - cell [ref=e703]
+                  - row "README.tr.md, (File)" [ref=e706]:
+                    - cell "README.tr.md, (File)" [ref=e707]:
+                      - generic [ref=e708]:
+                        - img [ref=e709]
+                        - link "README.tr.md, (File)" [ref=e714] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.tr.md
+                          - text: README.tr.md
+                    - cell [ref=e715]
+                    - cell [ref=e717]
+                  - row "README.uk.md, (File)" [ref=e720]:
+                    - cell "README.uk.md, (File)" [ref=e721]:
+                      - generic [ref=e722]:
+                        - img [ref=e723]
+                        - link "README.uk.md, (File)" [ref=e728] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.uk.md
+                          - text: README.uk.md
+                    - cell [ref=e729]
+                    - cell [ref=e731]
+                  - row "README.vi.md, (File)" [ref=e734]:
+                    - cell "README.vi.md, (File)" [ref=e735]:
+                      - generic [ref=e736]:
+                        - img [ref=e737]
+                        - link "README.vi.md, (File)" [ref=e742] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.vi.md
+                          - text: README.vi.md
+                    - cell [ref=e743]
+                    - cell [ref=e745]
+                  - row "README.zh.md, (File)" [ref=e748]:
+                    - cell "README.zh.md, (File)" [ref=e749]:
+                      - generic [ref=e750]:
+                        - img [ref=e751]
+                        - link "README.zh.md, (File)" [ref=e756] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.zh.md
+                          - text: README.zh.md
+                    - cell [ref=e757]
+                    - cell [ref=e759]
+                  - row "README.zht.md, (File)" [ref=e762]:
+                    - cell "README.zht.md, (File)" [ref=e763]:
+                      - generic [ref=e764]:
+                        - img [ref=e765]
+                        - link "README.zht.md, (File)" [ref=e770] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/README.zht.md
+                          - text: README.zht.md
+                    - cell [ref=e771]
+                    - cell [ref=e773]
+                  - row "SECURITY.md, (File)" [ref=e776]:
+                    - cell "SECURITY.md, (File)" [ref=e777]:
+                      - generic [ref=e778]:
+                        - img [ref=e779]
+                        - link "SECURITY.md, (File)" [ref=e784] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/SECURITY.md
+                          - text: SECURITY.md
+                    - cell [ref=e785]
+                    - cell [ref=e787]
+                  - row "STATS.md, (File)" [ref=e790]:
+                    - cell "STATS.md, (File)" [ref=e791]:
+                      - generic [ref=e792]:
+                        - img [ref=e793]
+                        - link "STATS.md, (File)" [ref=e798] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/STATS.md
+                          - text: STATS.md
+                    - cell [ref=e799]
+                    - cell [ref=e801]
+                  - row "bun.lock, (File)" [ref=e804]:
+                    - cell "bun.lock, (File)" [ref=e805]:
+                      - generic [ref=e806]:
+                        - img [ref=e807]
+                        - link "bun.lock, (File)" [ref=e812] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/bun.lock
+                          - text: bun.lock
+                    - cell [ref=e813]
+                    - cell [ref=e815]
+                  - row "bunfig.toml, (File)" [ref=e818]:
+                    - cell "bunfig.toml, (File)" [ref=e819]:
+                      - generic [ref=e820]:
+                        - img [ref=e821]
+                        - link "bunfig.toml, (File)" [ref=e826] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/bunfig.toml
+                          - text: bunfig.toml
+                    - cell [ref=e827]
+                    - cell [ref=e829]
+                  - row "flake.lock, (File)" [ref=e832]:
+                    - cell "flake.lock, (File)" [ref=e833]:
+                      - generic [ref=e834]:
+                        - img [ref=e835]
+                        - link "flake.lock, (File)" [ref=e840] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/flake.lock
+                          - text: flake.lock
+                    - cell [ref=e841]
+                    - cell [ref=e843]
+                  - row "flake.nix, (File)" [ref=e846]:
+                    - cell "flake.nix, (File)" [ref=e847]:
+                      - generic [ref=e848]:
+                        - img [ref=e849]
+                        - link "flake.nix, (File)" [ref=e854] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/flake.nix
+                          - text: flake.nix
+                    - cell [ref=e855]
+                    - cell [ref=e857]
+                  - row "install, (File)" [ref=e860]:
+                    - cell "install, (File)" [ref=e861]:
+                      - generic [ref=e862]:
+                        - img [ref=e863]
+                        - link "install, (File)" [ref=e868] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/install
+                          - text: install
+                    - cell [ref=e869]
+                    - cell [ref=e871]
+                  - row "package.json, (File)" [ref=e874]:
+                    - cell "package.json, (File)" [ref=e875]:
+                      - generic [ref=e876]:
+                        - img [ref=e877]
+                        - link "package.json, (File)" [ref=e882] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/package.json
+                          - text: package.json
+                    - cell [ref=e883]
+                    - cell [ref=e885]
+                  - row "sst-env.d.ts, (File)" [ref=e888]:
+                    - cell "sst-env.d.ts, (File)" [ref=e889]:
+                      - generic [ref=e890]:
+                        - img [ref=e891]
+                        - link "sst-env.d.ts, (File)" [ref=e896] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/sst-env.d.ts
+                          - text: sst-env.d.ts
+                    - cell [ref=e897]
+                    - cell [ref=e899]
+                  - row "sst.config.ts, (File)" [ref=e902]:
+                    - cell "sst.config.ts, (File)" [ref=e903]:
+                      - generic [ref=e904]:
+                        - img [ref=e905]
+                        - link "sst.config.ts, (File)" [ref=e910] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/sst.config.ts
+                          - text: sst.config.ts
+                    - cell [ref=e911]
+                    - cell [ref=e913]
+                  - row "tsconfig.json, (File)" [ref=e916]:
+                    - cell "tsconfig.json, (File)" [ref=e917]:
+                      - generic [ref=e918]:
+                        - img [ref=e919]
+                        - link "tsconfig.json, (File)" [ref=e924] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/tsconfig.json
+                          - text: tsconfig.json
+                    - cell [ref=e925]
+                    - cell [ref=e927]
+                  - row "turbo.json, (File)" [ref=e930]:
+                    - cell "turbo.json, (File)" [ref=e931]:
+                      - generic [ref=e932]:
+                        - img [ref=e933]
+                        - link "turbo.json, (File)" [ref=e938] [cursor=pointer]:
+                          - /url: /anomalyco/opencode/blob/dev/turbo.json
+                          - text: turbo.json
+                    - cell [ref=e939]
+                    - cell [ref=e941]
+            - generic [ref=e945]:
+              - generic [ref=e946]:
+                - heading "Repository files navigation" [level=2] [ref=e947]
+                - navigation "Repository files" [ref=e948]:
+                  - list [ref=e949]:
+                    - listitem [ref=e950]:
+                      - link "README" [ref=e951] [cursor=pointer]:
+                        - /url: "#"
+                        - img [ref=e953]
+                        - generic [ref=e955]: README
+                    - listitem [ref=e956]:
+                      - link "Contributing" [ref=e957] [cursor=pointer]:
+                        - /url: "#"
+                        - img [ref=e959]
+                        - generic [ref=e961]: Contributing
+                    - listitem [ref=e962]:
+                      - link "MIT license" [ref=e963] [cursor=pointer]:
+                        - /url: "#"
+                        - img [ref=e965]
+                        - generic [ref=e967]: MIT license
+                    - listitem [ref=e968]:
+                      - link "Security" [ref=e969] [cursor=pointer]:
+                        - /url: "#"
+                        - img [ref=e971]
+                        - generic [ref=e973]: Security
+                - button "Outline" [ref=e974] [cursor=pointer]:
+                  - img [ref=e975]
+              - article [ref=e978]:
+                - paragraph [ref=e979]:
+                  - link "OpenCode logo" [ref=e980] [cursor=pointer]:
+                    - /url: https://opencode.ai
+                    - img "OpenCode logo" [ref=e983]
+                - paragraph [ref=e984]: The open source AI coding agent.
+                - paragraph [ref=e985]:
+                  - link "Discord" [ref=e986] [cursor=pointer]:
+                    - /url: https://opencode.ai/discord
+                    - img "Discord" [ref=e987]
+                  - link "npm" [ref=e988] [cursor=pointer]:
+                    - /url: https://www.npmjs.com/package/opencode-ai
+                    - img "npm" [ref=e989]
+                  - link "Build status" [ref=e990] [cursor=pointer]:
+                    - /url: https://github.com/anomalyco/opencode/actions/workflows/publish.yml
+                    - img "Build status" [ref=e991]
+                - paragraph [ref=e992]:
+                  - link "English" [ref=e993] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.md
+                  - text: "|"
+                  - link "简体中文" [ref=e994] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.zh.md
+                  - text: "|"
+                  - link "繁體中文" [ref=e995] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.zht.md
+                  - text: "|"
+                  - link "한국어" [ref=e996] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.ko.md
+                  - text: "|"
+                  - link "Deutsch" [ref=e997] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.de.md
+                  - text: "|"
+                  - link "Español" [ref=e998] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.es.md
+                  - text: "|"
+                  - link "Français" [ref=e999] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.fr.md
+                  - text: "|"
+                  - link "Italiano" [ref=e1000] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.it.md
+                  - text: "|"
+                  - link "Dansk" [ref=e1001] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.da.md
+                  - text: "|"
+                  - link "日本語" [ref=e1002] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.ja.md
+                  - text: "|"
+                  - link "Polski" [ref=e1003] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.pl.md
+                  - text: "|"
+                  - link "Русский" [ref=e1004] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.ru.md
+                  - text: "|"
+                  - link "Bosanski" [ref=e1005] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.bs.md
+                  - text: "|"
+                  - link "العربية" [ref=e1006] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.ar.md
+                  - text: "|"
+                  - link "Norsk" [ref=e1007] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.no.md
+                  - text: "|"
+                  - link "Português (Brasil)" [ref=e1008] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.br.md
+                  - text: "|"
+                  - link "ไทย" [ref=e1009] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.th.md
+                  - text: "|"
+                  - link "Türkçe" [ref=e1010] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.tr.md
+                  - text: "|"
+                  - link "Українська" [ref=e1011] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.uk.md
+                  - text: "|"
+                  - link "বাংলা" [ref=e1012] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.bn.md
+                  - text: "|"
+                  - link "Ελληνικά" [ref=e1013] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.gr.md
+                  - text: "|"
+                  - link "Tiếng Việt" [ref=e1014] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/README.vi.md
+                - paragraph [ref=e1015]:
+                  - link "OpenCode Terminal UI" [ref=e1016] [cursor=pointer]:
+                    - /url: https://opencode.ai
+                    - img "OpenCode Terminal UI" [ref=e1017]
+                - separator [ref=e1018]
+                - generic [ref=e1019]:
+                  - heading "Installation" [level=3] [ref=e1020]
+                  - 'link "Permalink: Installation" [ref=e1021] [cursor=pointer]':
+                    - /url: "#installation"
+                    - img [ref=e1022]
+                - generic [ref=e1024]:
+                  - generic [ref=e1025]:
+                    - generic [ref=e1026]: "# YOLO"
+                    - text: curl -fsSL https://opencode.ai/install | bash
+                    - generic [ref=e1027]: "# Package managers"
+                    - text: npm i -g opencode-ai@latest
+                    - generic [ref=e1028]: "# or bun/pnpm/yarn"
+                    - text: scoop install opencode
+                    - generic [ref=e1029]: "# Windows"
+                    - text: choco install opencode
+                    - generic [ref=e1030]: "# Windows"
+                    - text: brew install anomalyco/tap/opencode
+                    - generic [ref=e1031]: "# macOS and Linux (recommended, always up to date)"
+                    - text: brew install opencode
+                    - generic [ref=e1032]: "# macOS and Linux (official brew formula, updated less)"
+                    - text: sudo pacman -S opencode
+                    - generic [ref=e1033]: "# Arch Linux (Stable)"
+                    - text: paru -S opencode-bin
+                    - generic [ref=e1034]: "# Arch Linux (Latest from AUR)"
+                    - text: mise use -g opencode
+                    - generic [ref=e1035]: "# Any OS"
+                    - text: nix run nixpkgs#opencode
+                    - generic [ref=e1036]: "# or github:anomalyco/opencode for latest dev branch"
+                  - button "Copy" [ref=e1038] [cursor=pointer]:
+                    - img [ref=e1039]
+                - generic [ref=e1042]:
+                  - paragraph [ref=e1043]:
+                    - img [ref=e1044]
+                    - text: Tip
+                  - paragraph [ref=e1046]: Remove versions older than 0.1.x before installing.
+                - generic [ref=e1047]:
+                  - heading "Desktop App (BETA)" [level=3] [ref=e1048]
+                  - 'link "Permalink: Desktop App (BETA)" [ref=e1049] [cursor=pointer]':
+                    - /url: "#desktop-app-beta"
+                    - img [ref=e1050]
+                - paragraph [ref=e1052]:
+                  - text: OpenCode is also available as a desktop application. Download directly from the
+                  - link "releases page" [ref=e1053] [cursor=pointer]:
+                    - /url: https://github.com/anomalyco/opencode/releases
+                  - text: or
+                  - link "opencode.ai/download" [ref=e1054] [cursor=pointer]:
+                    - /url: https://opencode.ai/download
+                  - text: .
+                - table [ref=e1056]:
+                  - rowgroup [ref=e1057]:
+                    - row "Platform Download" [ref=e1058]:
+                      - columnheader "Platform" [ref=e1059]
+                      - columnheader "Download" [ref=e1060]
+                  - rowgroup [ref=e1061]:
+                    - row "macOS (Apple Silicon) opencode-desktop-darwin-aarch64.dmg" [ref=e1062]:
+                      - cell "macOS (Apple Silicon)" [ref=e1063]
+                      - cell "opencode-desktop-darwin-aarch64.dmg" [ref=e1064]:
+                        - code [ref=e1065]: opencode-desktop-darwin-aarch64.dmg
+                    - row "macOS (Intel) opencode-desktop-darwin-x64.dmg" [ref=e1066]:
+                      - cell "macOS (Intel)" [ref=e1067]
+                      - cell "opencode-desktop-darwin-x64.dmg" [ref=e1068]:
+                        - code [ref=e1069]: opencode-desktop-darwin-x64.dmg
+                    - row "Windows opencode-desktop-windows-x64.exe" [ref=e1070]:
+                      - cell "Windows" [ref=e1071]
+                      - cell "opencode-desktop-windows-x64.exe" [ref=e1072]:
+                        - code [ref=e1073]: opencode-desktop-windows-x64.exe
+                    - row "Linux .deb, .rpm, or AppImage" [ref=e1074]:
+                      - cell "Linux" [ref=e1075]
+                      - cell ".deb, .rpm, or AppImage" [ref=e1076]:
+                        - code [ref=e1077]: .deb
+                        - text: ","
+                        - code [ref=e1078]: .rpm
+                        - text: ", or AppImage"
+                - generic [ref=e1079]:
+                  - generic [ref=e1080]:
+                    - generic [ref=e1081]: "# macOS (Homebrew)"
+                    - text: brew install --cask opencode-desktop
+                    - generic [ref=e1082]: "# Windows (Scoop)"
+                    - text: scoop bucket add extras; scoop install extras/opencode-desktop
+                  - button "Copy" [ref=e1084] [cursor=pointer]:
+                    - img [ref=e1085]
+                - generic [ref=e1088]:
+                  - heading "Installation Directory" [level=4] [ref=e1089]
+                  - 'link "Permalink: Installation Directory" [ref=e1090] [cursor=pointer]':
+                    - /url: "#installation-directory"
+                    - img [ref=e1091]
+                - paragraph [ref=e1093]: "The install script respects the following priority order for the installation path:"
+                - list [ref=e1094]:
+                  - listitem [ref=e1095]:
+                    - code [ref=e1096]: $OPENCODE_INSTALL_DIR
+                    - text: "- Custom installation directory"
+                  - listitem [ref=e1097]:
+                    - code [ref=e1098]: $XDG_BIN_DIR
+                    - text: "- XDG Base Directory Specification compliant path"
+                  - listitem [ref=e1099]:
+                    - code [ref=e1100]: $HOME/bin
+                    - text: "- Standard user binary directory (if it exists or can be created)"
+                  - listitem [ref=e1101]:
+                    - code [ref=e1102]: $HOME/.opencode/bin
+                    - text: "- Default fallback"
+                - generic [ref=e1103]:
+                  - generic [ref=e1104]:
+                    - generic [ref=e1105]: "# Examples"
+                    - text: OPENCODE_INSTALL_DIR=/usr/local/bin curl -fsSL https://opencode.ai/install | bash XDG_BIN_DIR=$HOME/.local/bin curl -fsSL https://opencode.ai/install | bash
+                  - button "Copy" [ref=e1107] [cursor=pointer]:
+                    - img [ref=e1108]
+                - generic [ref=e1111]:
+                  - heading "Agents" [level=3] [ref=e1112]
+                  - 'link "Permalink: Agents" [ref=e1113] [cursor=pointer]':
+                    - /url: "#agents"
+                    - img [ref=e1114]
+                - paragraph [ref=e1116]:
+                  - text: OpenCode includes two built-in agents you can switch between with the
+                  - code [ref=e1117]: Tab
+                  - text: key.
+                - list [ref=e1118]:
+                  - listitem [ref=e1119]:
+                    - strong [ref=e1120]: build
+                    - text: "- Default, full-access agent for development work"
+                  - listitem [ref=e1121]:
+                    - strong [ref=e1122]: plan
+                    - text: "- Read-only agent for analysis and code exploration"
+                    - list [ref=e1123]:
+                      - listitem [ref=e1124]: Denies file edits by default
+                      - listitem [ref=e1125]: Asks permission before running bash commands
+                      - listitem [ref=e1126]: Ideal for exploring unfamiliar codebases or planning changes
+                - paragraph [ref=e1127]:
+                  - text: Also included is a
+                  - strong [ref=e1128]: general
+                  - text: subagent for complex searches and multistep tasks. This is used internally and can be invoked using
+                  - code [ref=e1129]: "@general"
+                  - text: in messages.
+                - paragraph [ref=e1130]:
+                  - text: Learn more about
+                  - link "agents" [ref=e1131] [cursor=pointer]:
+                    - /url: https://opencode.ai/docs/agents
+                  - text: .
+                - generic [ref=e1132]:
+                  - heading "Documentation" [level=3] [ref=e1133]
+                  - 'link "Permalink: Documentation" [ref=e1134] [cursor=pointer]':
+                    - /url: "#documentation"
+                    - img [ref=e1135]
+                - paragraph [ref=e1137]:
+                  - text: For more info on how to configure OpenCode,
+                  - link "head over to our docs" [ref=e1138] [cursor=pointer]:
+                    - /url: https://opencode.ai/docs
+                    - strong [ref=e1139]: head over to our docs
+                  - text: .
+                - generic [ref=e1140]:
+                  - heading "Contributing" [level=3] [ref=e1141]
+                  - 'link "Permalink: Contributing" [ref=e1142] [cursor=pointer]':
+                    - /url: "#contributing"
+                    - img [ref=e1143]
+                - paragraph [ref=e1145]:
+                  - text: If you're interested in contributing to OpenCode, please read our
+                  - link "contributing docs" [ref=e1146] [cursor=pointer]:
+                    - /url: /anomalyco/opencode/blob/dev/CONTRIBUTING.md
+                  - text: before submitting a pull request.
+                - generic [ref=e1147]:
+                  - heading "Building on OpenCode" [level=3] [ref=e1148]
+                  - 'link "Permalink: Building on OpenCode" [ref=e1149] [cursor=pointer]':
+                    - /url: "#building-on-opencode"
+                    - img [ref=e1150]
+                - paragraph [ref=e1152]: If you are working on a project that's related to OpenCode and is using "opencode" as part of its name, for example "opencode-dashboard" or "opencode-mobile", please add a note to your README to clarify that it is not built by the OpenCode team and is not affiliated with us in any way.
+                - generic [ref=e1153]:
+                  - heading "FAQ" [level=3] [ref=e1154]
+                  - 'link "Permalink: FAQ" [ref=e1155] [cursor=pointer]':
+                    - /url: "#faq"
+                    - img [ref=e1156]
+                - generic [ref=e1158]:
+                  - heading "How is this different from Claude Code?" [level=4] [ref=e1159]
+                  - 'link "Permalink: How is this different from Claude Code?" [ref=e1160] [cursor=pointer]':
+                    - /url: "#how-is-this-different-from-claude-code"
+                    - img [ref=e1161]
+                - paragraph [ref=e1163]: "It's very similar to Claude Code in terms of capability. Here are the key differences:"
+                - list [ref=e1164]:
+                  - listitem [ref=e1165]: 100% open source
+                  - listitem [ref=e1166]:
+                    - text: Not coupled to any provider. Although we recommend the models we provide through
+                    - link "OpenCode Zen" [ref=e1167] [cursor=pointer]:
+                      - /url: https://opencode.ai/zen
+                    - text: ", OpenCode can be used with Claude, OpenAI, Google, or even local models. As models evolve, the gaps between them will close and pricing will drop, so being provider-agnostic is important."
+                  - listitem [ref=e1168]: Out-of-the-box LSP support
+                  - listitem [ref=e1169]:
+                    - text: A focus on TUI. OpenCode is built by neovim users and the creators of
+                    - link "terminal.shop" [ref=e1170] [cursor=pointer]:
+                      - /url: https://terminal.shop
+                    - text: ; we are going to push the limits of what's possible in the terminal.
+                  - listitem [ref=e1171]: A client/server architecture. This, for example, can allow OpenCode to run on your computer while you drive it remotely from a mobile app, meaning that the TUI frontend is just one of the possible clients.
+                - separator [ref=e1172]
+                - paragraph [ref=e1173]:
+                  - strong [ref=e1174]: Join our community
+                  - link "Discord" [ref=e1175] [cursor=pointer]:
+                    - /url: https://discord.gg/opencode
+                  - text: "|"
+                  - link "X.com" [ref=e1176] [cursor=pointer]:
+                    - /url: https://x.com/opencode
+        - generic [ref=e1180]:
+          - generic [ref=e1183]:
+            - heading "About" [level=2] [ref=e1184]
+            - paragraph [ref=e1185]: The open source coding agent.
+            - generic [ref=e1186]:
+              - img [ref=e1187]
+              - link "opencode.ai" [ref=e1190] [cursor=pointer]:
+                - /url: https://opencode.ai
+            - heading "Resources" [level=3] [ref=e1191]
+            - link "Readme" [ref=e1193] [cursor=pointer]:
+              - /url: "#readme-ov-file"
+              - img [ref=e1194]
+              - text: Readme
+            - heading "License" [level=3] [ref=e1196]
+            - link "MIT license" [ref=e1198] [cursor=pointer]:
+              - /url: "#MIT-1-ov-file"
+              - img [ref=e1199]
+              - text: MIT license
+            - heading "Contributing" [level=3] [ref=e1201]
+            - link "Contributing" [ref=e1203] [cursor=pointer]:
+              - /url: "#contributing-ov-file"
+              - img [ref=e1204]
+              - text: Contributing
+            - heading "Security policy" [level=3] [ref=e1206]
+            - link "Security policy" [ref=e1208] [cursor=pointer]:
+              - /url: "#security-ov-file"
+              - img [ref=e1209]
+              - text: Security policy
+            - link "Activity" [ref=e1212] [cursor=pointer]:
+              - /url: /anomalyco/opencode/activity
+              - img [ref=e1213]
+              - text: Activity
+            - link "Custom properties" [ref=e1216] [cursor=pointer]:
+              - /url: /anomalyco/opencode/custom-properties
+              - img [ref=e1217]
+              - text: Custom properties
+            - heading "Stars" [level=3] [ref=e1219]
+            - link "142k stars" [ref=e1221] [cursor=pointer]:
+              - /url: /anomalyco/opencode/stargazers
+              - img [ref=e1222]
+              - strong [ref=e1224]: 142k
+              - text: stars
+            - heading "Watchers" [level=3] [ref=e1225]
+            - link "558 watching" [ref=e1227] [cursor=pointer]:
+              - /url: /anomalyco/opencode/watchers
+              - img [ref=e1228]
+              - strong [ref=e1230]: "558"
+              - text: watching
+            - heading "Forks" [level=3] [ref=e1231]
+            - link "16k forks" [ref=e1233] [cursor=pointer]:
+              - /url: /anomalyco/opencode/forks
+              - img [ref=e1234]
+              - strong [ref=e1236]: 16k
+              - text: forks
+            - link "Report repository" [ref=e1238] [cursor=pointer]:
+              - /url: /contact/report-content?content_url=https%3A%2F%2Fgithub.com%2Fanomalyco%2Fopencode&report=anomalyco+%28user%29
+          - generic [ref=e1240]:
+            - heading "Releases 759" [level=2] [ref=e1241]:
+              - link "Releases 759" [ref=e1242] [cursor=pointer]:
+                - /url: /anomalyco/opencode/releases
+                - text: Releases
+                - generic "759" [ref=e1243]
+            - link "v1.4.3 Latest Apr 10, 20263 days ago" [ref=e1244] [cursor=pointer]:
+              - /url: /anomalyco/opencode/releases/tag/v1.4.3
+              - img [ref=e1245]
+              - generic [ref=e1247]:
+                - generic [ref=e1248]:
+                  - generic [ref=e1249]: v1.4.3
+                  - 'generic "Label: Latest" [ref=e1250]': Latest
+                - generic [ref=e1251]: Apr 10, 20263 days ago
+            - link "+ 758 releases" [ref=e1253] [cursor=pointer]:
+              - /url: /anomalyco/opencode/releases
+          - generic "Loading contributors" [ref=e1256]:
+            - generic:
+              - heading "Contributors" [level=2] [ref=e1257]:
+                - link "Contributors" [ref=e1258] [cursor=pointer]:
+                  - /url: /anomalyco/opencode/graphs/contributors
+              - list [ref=e1259]:
+                - listitem [ref=e1260]
+                - listitem [ref=e1262]
+                - listitem [ref=e1264]
+          - generic [ref=e1267]:
+            - heading "Languages" [level=2] [ref=e1268]
+            - list [ref=e1278]:
+              - listitem [ref=e1279]:
+                - link "TypeScript 58.1%" [ref=e1280] [cursor=pointer]:
+                  - /url: /anomalyco/opencode/search?l=typescript
+                  - img [ref=e1281]
+                  - generic [ref=e1283]: TypeScript
+                  - generic [ref=e1284]: 58.1%
+              - listitem [ref=e1285]:
+                - link "MDX 38.1%" [ref=e1286] [cursor=pointer]:
+                  - /url: /anomalyco/opencode/search?l=mdx
+                  - img [ref=e1287]
+                  - generic [ref=e1289]: MDX
+                  - generic [ref=e1290]: 38.1%
+              - listitem [ref=e1291]:
+                - link "CSS 2.9%" [ref=e1292] [cursor=pointer]:
+                  - /url: /anomalyco/opencode/search?l=css
+                  - img [ref=e1293]
+                  - generic [ref=e1295]: CSS
+                  - generic [ref=e1296]: 2.9%
+              - listitem [ref=e1297]:
+                - link "Rust 0.5%" [ref=e1298] [cursor=pointer]:
+                  - /url: /anomalyco/opencode/search?l=rust
+                  - img [ref=e1299]
+                  - generic [ref=e1301]: Rust
+                  - generic [ref=e1302]: 0.5%
+              - listitem [ref=e1303]:
+                - link "Astro 0.2%" [ref=e1304] [cursor=pointer]:
+                  - /url: /anomalyco/opencode/search?l=astro
+                  - img [ref=e1305]
+                  - generic [ref=e1307]: Astro
+                  - generic [ref=e1308]: 0.2%
+              - listitem [ref=e1309]:
+                - link "JavaScript 0.1%" [ref=e1310] [cursor=pointer]:
+                  - /url: /anomalyco/opencode/search?l=javascript
+                  - img [ref=e1311]
+                  - generic [ref=e1313]: JavaScript
+                  - generic [ref=e1314]: 0.1%
+              - listitem [ref=e1315]:
+                - generic [ref=e1316]:
+                  - img [ref=e1317]
+                  - generic [ref=e1319]: Other
+                  - generic [ref=e1320]: 0.1%
+  - contentinfo [ref=e1322]:
+    - heading "Footer" [level=2] [ref=e1323]
+    - generic [ref=e1324]:
+      - generic [ref=e1325]:
+        - link "GitHub Homepage" [ref=e1326] [cursor=pointer]:
+          - /url: https://github.com
+          - img [ref=e1327]
+        - generic [ref=e1329]: © 2026 GitHub, Inc.
+      - navigation "Footer" [ref=e1330]:
+        - heading "Footer navigation" [level=3] [ref=e1331]
+        - list "Footer navigation" [ref=e1332]:
+          - listitem [ref=e1333]:
+            - link "Terms" [ref=e1334] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+          - listitem [ref=e1335]:
+            - link "Privacy" [ref=e1336] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+          - listitem [ref=e1337]:
+            - link "Security" [ref=e1338] [cursor=pointer]:
+              - /url: https://github.com/security
+          - listitem [ref=e1339]:
+            - link "Status" [ref=e1340] [cursor=pointer]:
+              - /url: https://www.githubstatus.com/
+          - listitem [ref=e1341]:
+            - link "Community" [ref=e1342] [cursor=pointer]:
+              - /url: https://github.community/
+          - listitem [ref=e1343]:
+            - link "Docs" [ref=e1344] [cursor=pointer]:
+              - /url: https://docs.github.com/
+          - listitem [ref=e1345]:
+            - link "Contact" [ref=e1346] [cursor=pointer]:
+              - /url: https://support.github.com?tags=dotcom-footer
+          - listitem [ref=e1347]:
+            - button "Manage cookies" [ref=e1349] [cursor=pointer]
+          - listitem [ref=e1350]:
+            - button "Do not share my personal information" [ref=e1352] [cursor=pointer]

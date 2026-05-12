@@ -1,0 +1,39 @@
+{
+  "id": "parallel-execution-tracker",
+  "title": "Parallel Task Execution Tracker",
+  "description": "Track parallel TDD Red-phase task execution across multiple sessions",
+  "status": "in-progress",
+  "phase": "RED",
+  "parallelSessions": [
+    {
+      "sessionId": "ses_2473f1a9dffeLzX7K8PmNbQrT9",
+      "status": "pending",
+      "testResults": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0
+      }
+    },
+    {
+      "sessionId": "ses_2473g2b0effePmNbQrT9LzX7K8",
+      "status": "pending",
+      "testResults": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0
+      }
+    },
+    {
+      "sessionId": "ses_2473h3c1fffeQrT9LzX7K8PmNb",
+      "status": "pending",
+      "testResults": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0
+      }
+    }
+  ],
+  "target": "100% Red-phase test failure",
+  "coreContinuitySession": "ses_2474d0eceffemcelchyEqzmvbO",
+  "updatedAt": "2026-04-23T05:10:00Z"
+}
