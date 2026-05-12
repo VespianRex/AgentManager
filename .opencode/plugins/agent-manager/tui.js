@@ -1,15 +1,23 @@
-// TUI plugin: registers a Command Palette entry for the Agent Manager
-export const tui = async (api, options, meta) => {
+/**
+ * Minimal compatibility TUI entrypoint.
+ *
+ * The full JSX-based TUI lives in `.opencode/tui/agent-manager.jsx`, but a
+ * small source-level wrapper is kept for tests and older imports that expect a
+ * `tui` export from `src/tui.ts`.
+ */
+export async function tui(api) {
+    if (!api?.command?.register)
+        return;
     const unregister = api.command.register(() => [
         {
             title: "Agent Manager",
             value: "/agent-manager",
-            description: "Open the Agent Manager UI to inspect and manage agent configs.",
-            category: "Agent Manager",
-            suggested: true,
-            // Register a slash command name so the server-side tui.command.execute handler can receive it
-            slash: { name: "agent-manager", aliases: ["agent-config"] },
+            description: "Manage agent models and fallbacks",
+            slash: { name: "agent-manager", aliases: ["am", "agents"] },
+            onSelect: () => api.client?.execute?.("agent_manager", { action: "inspect" }),
         },
     ]);
-    api.lifecycle.onDispose(() => unregister());
-};
+    api.lifecycle?.onDispose?.(() => unregister?.());
+}
+export default { id: "agent-manager", tui };
+//# sourceMappingURL=tui.js.map

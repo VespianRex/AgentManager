@@ -1,0 +1,313 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": "1",
+        "title": "Fix failing agentSystem.test.ts — update deprecated import references",
+        "description": "Fix 2 failing tests in agentSystem.test.ts that reference deprecated exports (OH_MY_OPENCODE_AGENTS, DEFAULT_FALLBACK_CHAINS). Update imports to use agent-metadata.ts functions directly.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [],
+        "details": "The test file references exports from agentSystem.ts that are marked @deprecated and wrap agent-metadata.ts. Tests expect these to return data but they may return undefined after metadata refactoring. Fix: update test imports to use getOhMyOpenCodeAgents() and getAllFallbackChains() from agent-metadata.ts directly.\n\nFiles: test/agentSystem.test.ts (18 lines)\nVerification: bun test test/agentSystem.test.ts — should go from red to green\nRisk: Low — test-only change, no production code touched",
+        "testStrategy": "Run bun test test/agentSystem.test.ts — verify all assertions pass. Run bun test to confirm no regressions elsewhere.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Identify which deprecated exports the test references",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Update test imports to use agent-metadata.ts canonical functions",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Run test to confirm green",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "title": "Remove 9 duplicate test cases in schema.test.ts (lines 60-218)",
+        "description": "Delete duplicate it blocks in schema.test.ts that were copy-pasted. Keep original instances, verify no coverage reduction.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [],
+        "details": "Lines 60-218 of test/schema.test.ts contain 9 identical copies of 4 test cases (permission validation patterns). These are pure copy-paste duplicates. Delete duplicates keeping original instances. Verify no coverage reduction by running the test suite before and after.\n\nFiles: test/schema.test.ts (1224 lines, ~160 lines to remove)\nVerification: bun test test/schema.test.ts\nRisk: Low — pure deletion of redundant code",
+        "testStrategy": "Run bun test test/schema.test.ts — identical pass/fail count before and after deletion. All previously passing tests should still pass.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Identify exact duplicate blocks with line ranges",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Delete duplicates, preserve originals",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Run schema test suite to verify no coverage loss",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "3",
+        "title": "Fix empty catch block in model-tester.ts (L181-183) — add error logging",
+        "description": "Replace empty catch {} with error logging in createCancellationToken callback error handler. Zero risk, immediate observability gain.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [],
+        "details": "In src/services/model-tester/model-tester.ts, lines 181-183 contain an empty catch block: try { cb(); } catch {} that silently ignores errors in cancellation callbacks. Replace with catch (e) { console.error('Cancellation callback error:', e) }.\n\nFiles: src/services/model-tester/model-tester.ts (3-line change)\nVerification: bun test test/model-tester*.test.ts\nRisk: Low — additive change only, no behavioral modification",
+        "testStrategy": "Existing model-tester cancellation tests should pass. Consider adding assertion that callback errors are logged (vi.fn spy on console.error).",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Replace empty catch with error logging",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Run model-tester test suite to confirm no regressions",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "4",
+        "title": "Fix as any in schema.ts (L90) — generic constraint for hasCircularReference",
+        "description": "Replace as any cast in hasCircularReference with proper generic constraint. Pure type-level change, no runtime impact.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [],
+        "details": "Line 90 of src/schema.ts: if (hasCircularReference((input as any)[key], seen)) return true. Fix by changing function signature to: function hasCircularReference(obj: Record<string, unknown>, seen: WeakSet<object>): boolean.\n\nFiles: src/schema.ts (1-line signature change)\nVerification: bun test test/schema.test.ts\nRisk: Low — pure type refactor, runtime behavior identical",
+        "testStrategy": "Existing circular reference detection tests should pass unchanged. Verify all schema validation tests still pass.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Update hasCircularReference signature with generic constraint",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Run schema test suite",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "5",
+        "title": "Fix as any in tui.ts (L29) — replace any params with proper SolidJS types",
+        "description": "Replace any types on TUI API parameters with proper types from @opentui/solid or defined in global.d.ts.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [],
+        "details": "Line 29 of src/tui.ts: export const tui = async (api: any, options?: any, meta?: any) => {. Replace with proper OpenTUI types. Check @opentui/solid exports first; if types unavailable, define minimal interface in src/global.d.ts using TuiApi, TuiOptions, TuiMeta.\n\nFiles: src/tui.ts (1-line signature change), possibly src/global.d.ts (type additions)\nVerification: bun test test/tui.test.ts test/tui-smoke.test.ts\nRisk: Low — type-level only if @opentui/solid types match the actual API",
+        "testStrategy": "TUI tests verify command registration — should pass unchanged. Verify type narrowing doesn't break solid-js runtime injection.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Check @opentui/solid exports for TuiApi, TuiOptions, TuiMeta types",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Replace any params with proper types or define in global.d.ts",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Run TUI tests",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "6",
+        "title": "Implement config LRU cache in config.ts",
+        "description": "Add inline LRU cache to readJsoncFile/loadConfig to eliminate repeated disk I/O and JSONC parsing. ~30-line change using Map + mtime checks.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": [],
+        "details": "Create configCache Map<string, {doc, mtimeMs}> in src/config.ts. Wrap readJsoncFile with cache check: verify mtime unchanged via fs.stat, return cached if fresh. Invalidate on saveConfig/backupConfig writes. Set MAX_CACHE_SIZE=20, TTL via mtime check (no absolute TTL needed — mtime comparison handles staleness).\n\nFiles: src/config.ts (~30 lines added)\nTests: test/config.test.ts (add cache invalidation test)\nVerification: bun test test/config.test.ts\nRisk: Medium — stale reads possible if external process edits config. Mitigate with mtime check on every cache hit. Expected: 90-99% reduction in config load latency after first load.",
+        "testStrategy": "New tests: cache hit (same mtime returns cached), cache miss (changed mtime re-reads), cache eviction (max size exceeded), write invalidation (saveConfig clears cache entry).",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define configCache Map with mtime-based invalidation",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Integrate cache into readJsoncFile/loadConfig",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Invalidate cache on saveConfig and backupConfig writes",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Add cache tests to config.test.ts",
+            "status": "pending"
+          },
+          {
+            "id": 5,
+            "title": "Run full config test suite",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "7",
+        "title": "Parallelize findConfigFiles() with Promise.all",
+        "description": "Replace sequential for loop in findConfigFiles() with Promise.all for concurrent filesystem scanning. Builds on config cache (Task 6).",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": ["6"],
+        "details": "Current: for (const location of CONFIG_LOCATIONS) { ... await fs.lstat ... await fs.access ... } — 10 sequential I/O ops. Change to: const results = await Promise.all(CONFIG_LOCATIONS.map(loc => tryReadConfig(loc))). All 5 locations are independent. Sort results to maintain deterministic order.\n\nFiles: src/config.ts (refactor L79-97, ~20 lines changed)\nVerification: bun test test/config.test.ts\nRisk: Low — independent I/O ops, no shared mutable state. Key: sort results for deterministic output.",
+        "testStrategy": "Existing config discovery tests should pass — verify same files found (order may differ, sort in test assertions if needed). Add test for parallel execution correctness.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Extract tryReadConfig helper function from loop body",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Replace sequential loop with Promise.all + sort",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Run config discovery tests",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "8",
+        "title": "Define AppError base class in types.ts",
+        "description": "Create centralized AppError class with code, statusCode, cause fields. Foundation for proper error handling across all modules.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": [],
+        "details": "Define in src/types.ts (~30 lines): class AppError extends Error with code: string, statusCode: number, isOperational: boolean, cause?: Error. Add toJSON() for serialization. Add subclass ConfigValidationError. This replaces the current pattern of throwing generic Error without context.\n\nFiles: src/types.ts (add AppError class)\nTests: test/types.test.ts or add to existing test\nRisk: Low — new class, no existing code changed yet",
+        "testStrategy": "Unit test AppError construction, instanceof checks, toJSON serialization, cause chaining. Test ConfigValidationError subclass.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define AppError base class with code/statusCode/cause",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Define ConfigValidationError subclass",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Test error construction and serialization",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "9",
+        "title": "Remove console.error from library code — use AppError wrapping",
+        "description": "Replace 4 instances of console.error in library code with AppError re-throwing. Preserves original error context via cause property.",
+        "status": "pending",
+        "priority": "medium",
+        "dependencies": ["8"],
+        "details": "4 locations: schema.ts:108,126 (validateAgentManagerDocument, validatePartialAgentManagerDocument) and model-metadata.ts:30,41 (validateModelMetadata, validatePartialModelMetadata). Replace console.error + throw new Error('Invalid...') with throw new ConfigValidationError('...', cause: originalError).\n\nFiles: src/schema.ts, src/model-metadata.ts\nVerification: bun test test/schema.test.ts test/model-metadata.test.ts\nRisk: Medium — tests expecting exact error message strings may need updating. Error propagation behavior identical.",
+        "testStrategy": "Update tests to expect AppError instances instead of generic Error. Verify error.cause contains original ZodError. Error propagation tests should verify AppError type.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Replace console.error + throw Error in schema.ts (2 instances)",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Replace console.error + throw Error in model-metadata.ts (2 instances)",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Update tests for new error types",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Run full validation test suite",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "10",
+        "title": "Fix as any in plugin.ts — discriminated union + type guard",
+        "description": "Eliminate 4 as any casts in plugin.ts by defining a discriminated union for PluginExport and using type guards for narrowing.",
+        "status": "pending",
+        "priority": "high",
+        "dependencies": ["4", "5"],
+        "details": "4 locations: L49 (tool args), L56 (document), L70 (benchmark configs), L77 (benchmark configs array). Define PluginExport = { kind: 'server'; config: ServerConfig } | { kind: 'tui'; config: TuiConfig } in types.ts. Add isServerPlugin type guard. Replace as any casts with type guard narrowing.\n\nFiles: src/plugin.ts (~30 lines changed), src/types.ts (add union type)\nVerification: bun test test/plugin.test.ts test/plugin-typed.test.ts\nRisk: Medium — changes how plugin exports are typed. Must grep for all 'server'/'tui' property access on plugin objects to ensure type narrowing is used.",
+        "testStrategy": "Plugin tests should pass — verify both server and TUI export branches. Add test for type guard behavior. Run full test suite.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define discriminated union PluginExport in types.ts",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Add isServerPlugin type guard function",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Replace as any casts with type guard narrowing (4 locations)",
+            "status": "pending"
+          },
+          {
+            "id": 4,
+            "title": "Run plugin test suite",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": "11",
+        "title": "Add .js test files to .gitignore + extract magic numbers + JSDoc",
+        "description": "Cleanup round: gitignore generated test output, add named constants for magic numbers, document public APIs with JSDoc.",
+        "status": "pending",
+        "priority": "low",
+        "dependencies": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        "details": "Three independent cleanup tasks bundled together:\n1. .gitignore: Add test/*.js to exclude compiled test output\n2. Magic numbers: Define MS_PER_SECOND=1000, DEFAULT_TIMEOUT_MS=60000 in model-tester.ts\n3. JSDoc: Add @param/@returns/@throws to all exported functions in config.ts, plugin.ts, subagent.ts, tui-helpers.ts\n\nFiles: .gitignore, src/services/model-tester/model-tester.ts, src/config.ts, src/plugin.ts, src/subagent.ts, src/tui-helpers.ts\nRisk: Low — all changes are additive (documentation, constants, gitignore)",
+        "testStrategy": "No test changes needed. Verify git status excludes .js test files. Run full suite to confirm no regressions from constant refactoring.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Add test/*.js to .gitignore",
+            "status": "pending"
+          },
+          {
+            "id": 2,
+            "title": "Extract magic numbers to named constants in model-tester.ts",
+            "status": "pending"
+          },
+          {
+            "id": 3,
+            "title": "Add JSDoc to public APIs in config.ts, plugin.ts, subagent.ts, tui-helpers.ts",
+            "status": "pending"
+          }
+        ]
+      }
+    ]
+  }
+}

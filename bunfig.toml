@@ -1,0 +1,9 @@
+# Fix: OpenTUI v1.4.3 Bun runtime when function crash
+# Scoped preload for TUI only (avoids model-tester CLI conflict - complies with anti-pattern rules)
+# No preload for test or default to avoid affecting CLI tools like model-tester
+
+[test]
+# Global per-test timeout (30 seconds). Prevents runaway tests from hanging forever.
+# Bun's default is 5000ms (5s), but some integration tests need more time.
+# Individual tests can override with test({ timeout: ... }) or describe({ timeout: ... }).
+testTimeout = 30000

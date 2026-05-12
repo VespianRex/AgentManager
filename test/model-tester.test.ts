@@ -16,7 +16,7 @@ import {
   BenchmarkReport,
   ModelBenchmarkResult,
   BenchmarkOptions,
-} from "../src/model-tester.js";
+} from "../src/services/model-tester/model-tester.js";
 
 // Mock fetch for API testing
 global.fetch = vi.fn();
@@ -157,7 +157,10 @@ describe("ModelTester Interface - TDD Red Phase", () => {
 
       const response = await customTester.sendTestPrompt(request);
 
-      expect(mockClient.sendPrompt).toHaveBeenCalledWith(request);
+      expect(mockClient.sendPrompt).toHaveBeenCalledWith(
+        request,
+        expect.objectContaining({ signal: expect.any(AbortSignal) }),
+      );
       expect(response.text).toBe("Mock response");
     });
 
@@ -215,7 +218,7 @@ describe("ModelTester Interface - TDD Red Phase", () => {
       const slowClient: ModelApiClient = {
         sendPrompt: vi.fn().mockImplementation(() => {
           return new Promise((resolve) => {
-            setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 5000);
+            setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 200);
           });
         }),
       };
@@ -348,7 +351,7 @@ describe("ModelTester Interface - TDD Red Phase", () => {
       const slowClient: ModelApiClient = {
         sendPrompt: vi.fn().mockImplementation(() => {
           return new Promise((resolve) => {
-            setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 10000);
+            setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 200);
           });
         }),
       };
@@ -403,7 +406,7 @@ describe("ModelTester Interface - TDD Red Phase", () => {
       const slowClient: ModelApiClient = {
         sendPrompt: vi.fn().mockImplementation(() => {
           return new Promise((resolve) => {
-            setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 10000);
+            setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 150);
           });
         }),
       };
@@ -808,7 +811,7 @@ describe("11. Sequential Benchmarking", () => {
         callCount++;
         if (callCount === 1) {
           // Simulate a slow request that times out
-          await new Promise(resolve => setTimeout(resolve, 10000));
+          await new Promise(resolve => setTimeout(resolve, 200));
           return {
             text: "Late response",
             tokensUsed: 10,
@@ -884,7 +887,7 @@ describe("11. Sequential Benchmarking", () => {
   it("runBenchmark handles timeout errors correctly", async () => {
     const mockClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(async () => {
-        await new Promise(resolve => setTimeout(resolve, 10000));
+        await new Promise(resolve => setTimeout(resolve, 200));
         return {
           text: "Late response",
           tokensUsed: 10,
@@ -911,7 +914,7 @@ describe("11. Sequential Benchmarking", () => {
   it("runBenchmark handles cancellation correctly", async () => {
     const mockClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(async () => {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 200));
         return {
           text: "Response",
           tokensUsed: 10,
@@ -939,7 +942,7 @@ describe("11. Sequential Benchmarking", () => {
   it("runBenchmark respects per-benchmark timeout option", async () => {
     const mockClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(async () => {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 200));
         return {
           text: "Response",
           tokensUsed: 10,
@@ -1050,7 +1053,7 @@ describe("Error Handling", () => {
     const slowClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(() => {
         return new Promise((resolve) => {
-          setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 10000);
+          setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 200);
         });
       }),
     };
@@ -1080,7 +1083,7 @@ describe("5. Error Handling - Timeouts", () => {
     const slowClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(() => {
         return new Promise((resolve) => {
-          setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 10000);
+          setTimeout(() => resolve({ text: "late", tokensUsed: 1 }), 200);
         });
       }),
     };
@@ -1182,7 +1185,7 @@ describe("5. Error Handling - Timeouts", () => {
     const slowClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(() => {
         return new Promise((resolve) => {
-          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 1000);
+          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 200);
         });
       }),
     };
@@ -1439,7 +1442,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     const slowClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(() => {
         return new Promise((resolve) => {
-          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 1000);
+          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 200);
         });
       }),
     };
@@ -1451,7 +1454,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     };
 
     const promise = customTester.sendTestPrompt(request);
-    
+
     // Cancel immediately
     customTester.cancel();
 
@@ -1479,7 +1482,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     };
 
     const promise = customTester.sendTestPrompt(request);
-    
+
     // Simulate partial response then cancel
     setTimeout(() => {
       customTester.cancel();
@@ -1494,7 +1497,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     const slowClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(() => {
         return new Promise((resolve) => {
-          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 1000);
+          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 200);
         });
       }),
     };
@@ -1506,7 +1509,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     };
 
     const promise = customTester.sendTestPrompt(request);
-    
+
     // Cancel multiple times
     customTester.cancel();
     customTester.cancel();
@@ -1523,7 +1526,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     const slowClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(() => {
         return new Promise((resolve) => {
-          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 1000);
+          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 200);
         });
       }),
     };
@@ -1535,7 +1538,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     };
 
     const promise = customTester.sendTestPrompt(request, { abortController });
-    
+
     // Abort via AbortController
     abortController.abort();
 
@@ -1546,7 +1549,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
 
   it("handles cancellation token callback errors gracefully", async () => {
     const token = tester.createCancellationToken();
-    
+
     // Register a callback that throws
     token.onCancellationRequested(() => {
       throw new Error("Callback error");
@@ -1555,7 +1558,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     const slowClient: ModelApiClient = {
       sendPrompt: vi.fn().mockImplementation(() => {
         return new Promise((resolve) => {
-          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 1000);
+          setTimeout(() => resolve({ text: "response", tokensUsed: 5 }), 200);
         });
       }),
     };
@@ -1567,7 +1570,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     };
 
     const promise = customTester.sendTestPrompt(request, { cancellationToken: token });
-    
+
     // Trigger cancellation
     token.cancel?.();
 
@@ -1592,7 +1595,7 @@ describe("7. Error Handling - Mid-Request Cancellation", () => {
     };
 
     const promise = customTester.sendTestPrompt(request);
-    
+
     // Cancel immediately
     customTester.cancel();
 
@@ -1793,7 +1796,7 @@ describe("9. Error Handling - Malformed Responses", () => {
 
   it("handles response with extremely large text", async () => {
     const largeText = "word ".repeat(100000);
-    
+
     const mockClient: ModelApiClient = {
       sendPrompt: vi.fn().mockResolvedValue({
         text: largeText,
@@ -1817,7 +1820,7 @@ describe("9. Error Handling - Malformed Responses", () => {
 
   it("handles response with special characters in text", async () => {
     const specialText = "Hello\x00World\nNew\tLine\r\nUnicode: 🎉🚀";
-    
+
     const mockClient: ModelApiClient = {
       sendPrompt: vi.fn().mockResolvedValue({
         text: specialText,
@@ -1922,7 +1925,7 @@ describe("9. Error Handling - Malformed Responses", () => {
 
   it("handles response with binary data", async () => {
     const binaryData = Buffer.from([0x00, 0x01, 0x02, 0x03]);
-    
+
     const mockClient: ModelApiClient = {
       sendPrompt: vi.fn().mockResolvedValue({
         text: binaryData,
@@ -1968,7 +1971,7 @@ describe("10. Error Handling - Edge Cases", () => {
 
   it("handles very long prompt string", async () => {
     const longPrompt = "word ".repeat(50000);
-    
+
     const mockClient: ModelApiClient = {
       sendPrompt: vi.fn().mockResolvedValue({
         text: "Response",
@@ -2174,7 +2177,10 @@ describe("10. Error Handling - Edge Cases", () => {
     const response = await customTester.sendTestPrompt(request);
 
     expect(response).toBeDefined();
-    expect(mockClient.sendPrompt).toHaveBeenCalledWith(expect.objectContaining({ temperature: 2.0 }));
+    expect(mockClient.sendPrompt).toHaveBeenCalledWith(
+      expect.objectContaining({ temperature: 2.0 }),
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    );
   });
 
   it("handles request with negative temperature", async () => {

@@ -36,12 +36,14 @@ AgentManager/
 - **Dual output**: TypeScript compiles to JS in `dist/`, then rsync'd to `.opencode/plugins/`.
 - **Symlink deployment**: Global plugins dir uses symlinks to project files.
 - **JSONC support**: Config loading preserves comments via `comment-json`.
+- **Symlink security**: Config files that are symlinks are rejected (security feature).
 
 ## ANTI-PATTERNS (THIS PROJECT)
 - **NEVER** put non-plugin `.js` files in `.opencode/plugins/` or `~/.config/opencode/plugins/` (scanner loads ALL `.js` files).
 - **NEVER** export both `server` and `tui` in the same default export (OpenCode throws).
 - **NEVER** assume TUI auto-discovers plugins (needs explicit `tui.json`).
 - **DON'T** rely on auto-discovery for path plugins (broken in v1.4.3); use explicit `config.json` plugin array.
+- **NEVER** use symlinks for config files (rejected for security - prevents path traversal attacks).
 
 ## OPENCODE PLUGIN LOADING RULES
 - Server scans `{plugin,plugins}/*.{ts,js}` non-recursively in `.opencode/plugins/` and `~/.config/opencode/plugins/`.
@@ -49,6 +51,23 @@ AgentManager/
 - Plugin default export must have EITHER `server` OR `tui`, not both.
 - `readV1Plugin` in `detect` mode (server) returns undefined silently; strict mode (TUI) throws on invalid.
 - OpenCode v1.4.3 has bug #18094: loader silently stops after certain plugins. Alphabetical ordering workaround (`aa-*` before `oh-*`).
+
+## SECURITY
+
+### Path Traversal Prevention
+- `normalizePath()` validates that `~/` paths don't escape home directory
+- Rejects patterns like `~/../../../etc/passwd`
+- Error messages don't leak filesystem structure
+
+### Symlink Rejection
+- Config files that are symlinks are rejected via `fs.lstat()` check
+- Prevents symlink-based path traversal attacks
+- Backup files use timestamp + random component to ensure uniqueness
+
+### File Operations
+- `readJsoncFile()`: Checks for symlinks before reading
+- `findConfigFiles()`: Skips symlinked config files
+- `backupConfig()`: Uses unique timestamps to prevent collisions
 
 ## CRITICAL KNOWLEDGE FROM PREVIOUS SESSIONS (QWEN CLI)
 
@@ -61,10 +80,18 @@ AgentManager/
 6. **"Path plugin must export id"**: TUI plugin default missing `id` → Added `id: "agent-manager"`.
 7. **TUI not discovering plugins**: Needs explicit `~/.config/opencode/tui.json`.
 8. **JSX runtime errors**: TUI uses SolidJS, not React → Added `@opentui/solid/runtime-plugin-support`.
+9. **Path traversal vulnerability**: `normalizePath` lacked traversal prevention → Added security checks to reject `~/../` patterns.
+10. **Symlink attack vector**: Config files could be symlinks → Added `lstat` check to reject symlinks in `readJsoncFile` and `findConfigFiles`.
 
-### UNRESOLVED ISSUES
-- **DialogSelect options not selectable**: The TUI shows Agent Manager dialog but clicks do nothing. Multiple attempts with `onSelect` patterns failed. Last attempt: per-option `onSelect` + top-level `onSelect`. The PluginManager internally uses `rows`/`value`/`onValueChange` - this may be the correct pattern.
-- **Build process**: Manual edits to `dist/` lost on rebuild. Need automated post-build step.
+### RESOLVED ISSUES
+- **DialogSelect options not selectable**: Fixed - TUI uses SolidJS `onSelect` pattern correctly (verified in `test/tui-dialog-transitions.test.ts`).
+- **Model picker selection**: Model lists should commit via per-option `onSelect` first, with the top-level dialog callback kept as a guarded fallback. This matches OpenCode's own DialogSelect usage and avoids relying on a single event path.
+- **Build process**: Manual edits to `dist/` lost on rebuild → Source files are the truth; rebuild from source.
+- **Path traversal vulnerability**: Fixed - `normalizePath` now validates paths stay within home directory.
+- **Symlink attack vector**: Fixed - Config files that are symlinks are rejected via `lstat` check.
+
+### UNRESVED ISSUES
+- None currently.
 
 ## COMMANDS
 ```bash

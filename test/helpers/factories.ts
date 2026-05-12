@@ -1,4 +1,4 @@
-import type { LoadedConfig, MergedAgent, AgentConfig } from "../src/tui-helpers.js";
+import type { LoadedConfig, MergedAgent, AgentConfig } from "../../src/tui-helpers.js";
 
 export function makeLoadedConfig(overrides: Partial<LoadedConfig> = {}): LoadedConfig {
   return {

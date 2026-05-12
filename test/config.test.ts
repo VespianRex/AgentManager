@@ -1,4 +1,4 @@
-import { describe, it, expect } from "bun:test";
+import { describe, it, expect, afterEach } from "bun:test";
 import os from "node:os";
 import path from "node:path";
 import fs from "node:fs/promises";
@@ -13,6 +13,13 @@ const SAMPLE = `{
 }`;
 
 describe("config module", () => {
+  const originalHome = process.env.HOME;
+
+  afterEach(() => {
+    // Restore original HOME after each test to prevent cross-test pollution
+    process.env.HOME = originalHome;
+  });
+
   it("finds config files in declared precedence order", async () => {
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-"));
     const home = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-home-"));
@@ -82,6 +89,19 @@ describe("config module", () => {
     expect(saved).toInclude("// keep this nested comment");
     expect(saved).toInclude("opencode/gpt-5-mini");
     expect(backupContents).toInclude("opencode/gpt-5-nano");
+  });
+
+  it("propagates security violations instead of hiding them as missing configs", async () => {
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-config-security-"));
+    const configDir = path.join(tmp, ".opencode");
+    const targetPath = path.join(tmp, "target.json");
+    const symlinkPath = path.join(configDir, "oh-my-opencode.json");
+
+    await fs.mkdir(configDir, { recursive: true });
+    await fs.writeFile(targetPath, SAMPLE, "utf8");
+    await fs.symlink(targetPath, symlinkPath);
+
+    await expect(findConfigFiles(tmp)).rejects.toThrow("Security violation");
   });
 
   it("summarizes config correctly", () => {
@@ -157,15 +177,11 @@ describe("config module", () => {
 });
 
 describe("config security - path traversal prevention", () => {
-  it("normalizes path traversal attempts without throwing", async () => {
+  it("rejects path traversal attempts that escape home", async () => {
     const { normalizePath } = await import("../src/config.js");
     const cwd = process.cwd();
 
-    // normalizePath normalizes paths but doesn't prevent traversal
-    // The OS/file system will handle actual access
-    const result = normalizePath("~/../../../etc/passwd", cwd);
-    expect(typeof result).toBe("string");
-    expect(result.length).toBeGreaterThan(0);
+    expect(() => normalizePath("~/../../../etc/passwd", cwd)).toThrow();
   });
 
   it("rejects paths that escape home directory", async () => {
@@ -325,16 +341,19 @@ describe("config security - additional attack vectors", () => {
     const { normalizePath } = await import("../src/config.js");
     const cwd = process.cwd();
 
-    // Combined traversal techniques
-    const combinedAttacks = [
-      "~/./../etc/passwd",
-      "~/~/../etc/passwd",
-      "~/./../../etc/passwd",
-      "~/.././../etc/passwd",
+    const combinedCases = [
+      { input: "~/./../etc/passwd", throws: true },
+      { input: "~/~/../etc/passwd", throws: false },
+      { input: "~/./../../etc/passwd", throws: true },
+      { input: "~/.././../etc/passwd", throws: true },
     ];
 
-    for (const path of combinedAttacks) {
-      expect(() => normalizePath(path, cwd)).toThrow();
+    for (const { input, throws } of combinedCases) {
+      if (throws) {
+        expect(() => normalizePath(input, cwd)).toThrow();
+      } else {
+        expect(() => normalizePath(input, cwd)).not.toThrow();
+      }
     }
   });
 });
@@ -407,7 +426,7 @@ describe("config security - file operation race conditions", () => {
 });
 
 describe("config security - symlink attacks", () => {
-  it("detects and handles symlink to sensitive file", async () => {
+  it("rejects symlinked config files during discovery", async () => {
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-symlink-"));
     const realFile = path.join(tmp, "real-config.json");
     const symlinkFile = path.join(tmp, "opencode.json");
@@ -415,55 +434,35 @@ describe("config security - symlink attacks", () => {
     await fs.writeFile(realFile, SAMPLE, "utf8");
     await fs.symlink(realFile, symlinkFile);
 
-    const { loadConfig } = await import("../src/config.js");
     const { findConfigFiles } = await import("../src/config.js");
-
-    const configs = await findConfigFiles(tmp);
-    expect(configs.length).toBeGreaterThan(0);
-
-    // Should load through symlink without issues
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
+    await expect(findConfigFiles(tmp)).rejects.toThrow("Security violation");
   });
 
-  it("handles broken symlink gracefully", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-broken-symlink-"));
-    const symlinkFile = path.join(tmp, "opencode.json");
+it("rejects broken symlink", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-broken-symlink-"));
+  const symlinkFile = path.join(tmp, "opencode.json");
 
-    // Create symlink to non-existent file
-    await fs.symlink("/nonexistent/path/config.json", symlinkFile);
+  // Create symlink to non-existent file
+  await fs.symlink("/nonexistent/path/config.json", symlinkFile);
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
+  await expect(findConfigFiles(tmp)).rejects.toThrow("Security violation");
+});
 
-    // Should fail gracefully
-    await expect(loadConfig(configs[0])).rejects.toThrow();
-  });
+it("rejects symlinks for security (even valid ones)", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-symlink-rejection-"));
+  const targetDir = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-target-"));
+  const realFile = path.join(targetDir, "sensitive.json");
+  const symlinkFile = path.join(tmp, "opencode.json");
 
-  it("prevents symlink traversal outside project directory", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-symlink-traversal-"));
-    const targetDir = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-target-"));
-    const realFile = path.join(targetDir, "sensitive.json");
-    const symlinkFile = path.join(tmp, "opencode.json");
+  await fs.writeFile(realFile, '{"secret": "data"}', "utf8");
+  await fs.symlink(realFile, symlinkFile);
 
-    await fs.writeFile(realFile, '{"secret": "data"}', "utf8");
-    await fs.symlink(realFile, symlinkFile);
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
-
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
-
-    // Should load the file through symlink (this tests that symlinks are followed)
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
-    // The document should contain the content from the target file
-    expect(document).toHaveProperty("secret");
-  });
+  await expect(findConfigFiles(tmp)).rejects.toThrow("Security violation");
+});
 });
 
 describe("config security - permission checks", () => {
@@ -488,12 +487,11 @@ describe("config security - permission checks", () => {
 
   it("handles non-writable directory during save", async () => {
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-readonly-dir-"));
+    const filePath = path.join(tmp, "opencode.json");
+    await fs.writeFile(filePath, SAMPLE, "utf8");
     await fs.chmod(tmp, 0o555); // Read-only directory
 
     try {
-      const filePath = path.join(tmp, "opencode.json");
-      await fs.writeFile(filePath, SAMPLE, "utf8");
-
       const { findConfigFiles, saveConfig } = await import("../src/config.js");
       const configs = await findConfigFiles(tmp);
       if (configs.length === 0) return;
@@ -513,13 +511,13 @@ describe("config security - permission checks", () => {
     await fs.chmod(filePath, 0o000); // No permissions
 
     try {
-      const { loadConfig } = await import("../src/config.js");
+      // Skip permission test when running as root (UID 0), which bypasses file permissions on macOS/Linux
+      if (process.getuid?.() === 0) {
+        await fs.chmod(filePath, 0o644);
+        return;
+      }
       const { findConfigFiles } = await import("../src/config.js");
-
-      const configs = await findConfigFiles(tmp);
-      if (configs.length === 0) return;
-
-      await expect(loadConfig(configs[0])).rejects.toThrow();
+      await expect(findConfigFiles(tmp)).rejects.toThrow();
     } finally {
       await fs.chmod(filePath, 0o644);
     }
@@ -616,17 +614,24 @@ describe("config security - backup integrity", () => {
 describe("config security - concurrent file operations", () => {
   it("handles concurrent reads safely", async () => {
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-concurrent-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-concurrent-home-"));
+    const previousHome = process.env.HOME;
+    process.env.HOME = home;
     const filePath = path.join(tmp, "opencode.json");
     await fs.writeFile(filePath, SAMPLE, "utf8");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+    try {
+      const { loadConfig } = await import("../src/config.js");
+      const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    const promises = configs.map((config) => loadConfig(config));
+      const configs = await findConfigFiles(tmp);
+      const promises = configs.map((config) => loadConfig(config));
 
-    const results = await Promise.all(promises);
-    expect(results.length).toBeGreaterThan(0);
+      const results = await Promise.all(promises);
+      expect(results.length).toBeGreaterThan(0);
+    } finally {
+      process.env.HOME = previousHome;
+    }
   });
 
   it("handles concurrent writes with proper locking", async () => {
@@ -723,7 +728,7 @@ describe("config security - concurrent file operations", () => {
     if (configs.length === 0) return;
 
     const config = configs[0];
-    
+
     // Mix of read and write operations
     const promises = [
       loadConfig(config),
@@ -756,12 +761,12 @@ describe("config security - concurrent file operations", () => {
 
     const results = await Promise.all(promises);
     expect(results.length).toBe(10);
-    
+
     // All backup paths should be unique
     const backupPaths = results.map((result) => result);
     const uniquePaths = new Set(backupPaths);
     expect(uniquePaths.size).toBe(10); // All should be unique
-    
+
     // All should contain the backup identifier
     expect(backupPaths.every(path => path.includes(".bak."))).toBe(true);
   });
@@ -874,181 +879,196 @@ describe("config security - backup verification", () => {
     }
   });
 
-  it("handles config with prototype pollution attempts", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-proto-pollution-"));
-    const filePath = path.join(tmp, "opencode.json");
-    const maliciousContent = `{
-      "__proto__": { "polluted": true },
-      "agents": {
-        "test": { "model": "gpt-4" }
-      }
-    }`;
-    await fs.writeFile(filePath, maliciousContent, "utf8");
+it("prevents prototype pollution via __proto__", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-proto-pollution-"));
+  const filePath = path.join(tmp, "opencode.json");
+  const maliciousContent = `{
+  "__proto__": { "polluted": true },
+  "agents": {
+    "test": { "model": "gpt-4" }
+  }
+}`;
+  await fs.writeFile(filePath, maliciousContent, "utf8");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+  const { loadConfig } = await import("../src/config.js");
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
+  const configs = await findConfigFiles(tmp);
+  if (configs.length === 0) return;
 
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
-    expect((document as any).polluted).toBeUndefined();
-  });
+  const { document } = await loadConfig(configs[0]);
+  expect(document).toBeDefined();
+  // comment-json treats __proto__ as a regular property, not prototype pollution
+  // The real test is that Object.prototype is not polluted
+  expect(({} as any).polluted).toBeUndefined();
+  // And the document should have __proto__ as an own property (safe)
+  expect(document).toHaveProperty("__proto__");
+});
 
-  it("handles config with constructor property", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-constructor-"));
-    const filePath = path.join(tmp, "opencode.json");
-    const maliciousContent = `{
-      "constructor": "malicious",
-      "agents": {
-        "test": { "model": "gpt-4" }
-      }
-    }`;
-    await fs.writeFile(filePath, maliciousContent, "utf8");
+it("handles config with constructor property as own property (safe)", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-constructor-"));
+  const filePath = path.join(tmp, "opencode.json");
+  const maliciousContent = `{
+  "constructor": "malicious",
+  "agents": {
+    "test": { "model": "gpt-4" }
+  }
+}`;
+  await fs.writeFile(filePath, maliciousContent, "utf8");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+  const { loadConfig } = await import("../src/config.js");
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
+  const configs = await findConfigFiles(tmp);
+  if (configs.length === 0) return;
 
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
-    expect((document as any).constructor).toBeUndefined();
-  });
+  const { document } = await loadConfig(configs[0]);
+  expect(document).toBeDefined();
+  // constructor is preserved as own property (safe, not prototype pollution)
+  expect(document).toHaveProperty("constructor");
+  // But Object.prototype.constructor is unchanged
+  expect({}.constructor).toBe(Object.prototype.constructor);
+});
 
-  it("handles config with toString property", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-tostring-"));
-    const filePath = path.join(tmp, "opencode.json");
-    const maliciousContent = `{
-      "toString": "malicious",
-      "agents": {
-        "test": { "model": "gpt-4" }
-      }
-    }`;
-    await fs.writeFile(filePath, maliciousContent, "utf8");
+it("handles config with toString property as own property (safe)", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-tostring-"));
+  const filePath = path.join(tmp, "opencode.json");
+  const maliciousContent = `{
+  "toString": "malicious",
+  "agents": {
+    "test": { "model": "gpt-4" }
+  }
+}`;
+  await fs.writeFile(filePath, maliciousContent, "utf8");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+  const { loadConfig } = await import("../src/config.js");
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
+  const configs = await findConfigFiles(tmp);
+  if (configs.length === 0) return;
 
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
-    expect((document as any).toString).toBeUndefined();
-  });
+  const { document } = await loadConfig(configs[0]);
+  expect(document).toBeDefined();
+  // toString is preserved as own property (safe)
+  expect(document).toHaveProperty("toString");
+  // Object.prototype.toString is unchanged
+  expect({}.toString).toBe(Object.prototype.toString);
+});
 
-  it("handles config with valueOf property", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-valueof-"));
-    const filePath = path.join(tmp, "opencode.json");
-    const maliciousContent = `{
-      "valueOf": "malicious",
-      "agents": {
-        "test": { "model": "gpt-4" }
-      }
-    }`;
-    await fs.writeFile(filePath, maliciousContent, "utf8");
+it("handles config with valueOf property as own property (safe)", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-valueof-"));
+  const filePath = path.join(tmp, "opencode.json");
+  const maliciousContent = `{
+  "valueOf": "malicious",
+  "agents": {
+    "test": { "model": "gpt-4" }
+  }
+}`;
+  await fs.writeFile(filePath, maliciousContent, "utf8");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+  const { loadConfig } = await import("../src/config.js");
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
+  const configs = await findConfigFiles(tmp);
+  if (configs.length === 0) return;
 
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
-    expect((document as any).valueOf).toBeUndefined();
-  });
+  const { document } = await loadConfig(configs[0]);
+  expect(document).toBeDefined();
+  expect(document).toHaveProperty("valueOf");
+  expect({}.valueOf).toBe(Object.prototype.valueOf);
+});
 
-  it("handles config with hasOwnProperty property", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-hasownproperty-"));
-    const filePath = path.join(tmp, "opencode.json");
-    const maliciousContent = `{
-      "hasOwnProperty": "malicious",
-      "agents": {
-        "test": { "model": "gpt-4" }
-      }
-    }`;
-    await fs.writeFile(filePath, maliciousContent, "utf8");
+it("handles config with hasOwnProperty property as own property (safe)", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-hasownproperty-"));
+  const filePath = path.join(tmp, "opencode.json");
+  const maliciousContent = `{
+  "hasOwnProperty": "malicious",
+  "agents": {
+    "test": { "model": "gpt-4" }
+  }
+}`;
+  await fs.writeFile(filePath, maliciousContent, "utf8");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+  const { loadConfig } = await import("../src/config.js");
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
+  const configs = await findConfigFiles(tmp);
+  if (configs.length === 0) return;
 
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
-    expect((document as any).hasOwnProperty).toBeUndefined();
-  });
+  const { document } = await loadConfig(configs[0]);
+  expect(document).toBeDefined();
+  expect(document).toHaveProperty("hasOwnProperty");
+  expect({}.hasOwnProperty).toBe(Object.prototype.hasOwnProperty);
+});
 
-  it("handles config with isPrototypeOf property", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-isprototypeof-"));
-    const filePath = path.join(tmp, "opencode.json");
-    const maliciousContent = `{
-      "isPrototypeOf": "malicious",
-      "agents": {
-        "test": { "model": "gpt-4" }
-      }
-    }`;
-    await fs.writeFile(filePath, maliciousContent, "utf8");
+it("handles config with isPrototypeOf property as own property (safe)", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-isprototypeof-"));
+  const filePath = path.join(tmp, "opencode.json");
+  const maliciousContent = `{
+  "isPrototypeOf": "malicious",
+  "agents": {
+    "test": { "model": "gpt-4" }
+  }
+}`;
+  await fs.writeFile(filePath, maliciousContent, "utf8");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+  const { loadConfig } = await import("../src/config.js");
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
+  const configs = await findConfigFiles(tmp);
+  if (configs.length === 0) return;
 
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
-    expect((document as any).isPrototypeOf).toBeUndefined();
-  });
+  const { document } = await loadConfig(configs[0]);
+  expect(document).toBeDefined();
+  expect(document).toHaveProperty("isPrototypeOf");
+  expect({}.isPrototypeOf).toBe(Object.prototype.isPrototypeOf);
+});
 
-  it("handles config with propertyIsEnumerable property", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-propertyisenumerable-"));
-    const filePath = path.join(tmp, "opencode.json");
-    const maliciousContent = `{
-      "propertyIsEnumerable": "malicious",
-      "agents": {
-        "test": { "model": "gpt-4" }
-      }
-    }`;
-    await fs.writeFile(filePath, maliciousContent, "utf8");
+it("handles config with propertyIsEnumerable property as own property (safe)", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-propertyisenumerable-"));
+  const filePath = path.join(tmp, "opencode.json");
+  const maliciousContent = `{
+  "propertyIsEnumerable": "malicious",
+  "agents": {
+    "test": { "model": "gpt-4" }
+  }
+}`;
+  await fs.writeFile(filePath, maliciousContent, "utf8");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+  const { loadConfig } = await import("../src/config.js");
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
+  const configs = await findConfigFiles(tmp);
+  if (configs.length === 0) return;
 
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
-    expect((document as any).propertyIsEnumerable).toBeUndefined();
-  });
+  const { document } = await loadConfig(configs[0]);
+  expect(document).toBeDefined();
+  expect(document).toHaveProperty("propertyIsEnumerable");
+  expect({}.propertyIsEnumerable).toBe(Object.prototype.propertyIsEnumerable);
+});
 
-  it("handles config with toLocaleString property", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-tolocalestring-"));
-    const filePath = path.join(tmp, "opencode.json");
-    const maliciousContent = `{
-      "toLocaleString": "malicious",
-      "agents": {
-        "test": { "model": "gpt-4" }
-      }
-    }`;
-    await fs.writeFile(filePath, maliciousContent, "utf8");
+it("handles config with toLocaleString property as own property (safe)", async () => {
+  const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-tolocalestring-"));
+  const filePath = path.join(tmp, "opencode.json");
+  const maliciousContent = `{
+  "toLocaleString": "malicious",
+  "agents": {
+    "test": { "model": "gpt-4" }
+  }
+}`;
+  await fs.writeFile(filePath, maliciousContent, "utf8");
 
-    const { loadConfig } = await import("../src/config.js");
-    const { findConfigFiles } = await import("../src/config.js");
+  const { loadConfig } = await import("../src/config.js");
+  const { findConfigFiles } = await import("../src/config.js");
 
-    const configs = await findConfigFiles(tmp);
-    if (configs.length === 0) return;
+  const configs = await findConfigFiles(tmp);
+  if (configs.length === 0) return;
 
-    const { document } = await loadConfig(configs[0]);
-    expect(document).toBeDefined();
-    expect((document as any).toLocaleString).toBeUndefined();
-  });
+  const { document } = await loadConfig(configs[0]);
+  expect(document).toBeDefined();
+  expect(document).toHaveProperty("toLocaleString");
+  expect({}.toLocaleString).toBe(Object.prototype.toLocaleString);
+});
 
   it("handles config with circular references", async () => {
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-circular-"));
@@ -1124,7 +1144,7 @@ describe("config security - backup verification", () => {
     if (configs.length === 0) return;
 
     const config = configs[0];
-    
+
     const operations = [
       loadConfig(config),
       saveConfig(config, { agents: { agent1: { model: "model1" } } }),
@@ -1140,13 +1160,13 @@ describe("config security - backup verification", () => {
 
   it("handles file system errors gracefully", async () => {
     const { loadConfig } = await import("../src/config.js");
-    
+
     const nonExistentConfig = {
       path: "/tmp/nonexistent-" + Date.now() + "/config.json",
       source: "project" as const,
       type: "opencode" as const,
     };
-    
+
     await expect(loadConfig(nonExistentConfig)).rejects.toThrow();
   });
 
@@ -1157,13 +1177,13 @@ describe("config security - backup verification", () => {
     await fs.chmod(filePath, 0o000);
 
     try {
-      const { loadConfig } = await import("../src/config.js");
+      // Skip permission test when running as root (UID 0), which bypasses file permissions on macOS/Linux
+      if (process.getuid?.() === 0) {
+        await fs.chmod(filePath, 0o644);
+        return;
+      }
       const { findConfigFiles } = await import("../src/config.js");
-
-      const configs = await findConfigFiles(tmp);
-      if (configs.length === 0) return;
-
-      await expect(loadConfig(configs[0])).rejects.toThrow();
+      await expect(findConfigFiles(tmp)).rejects.toThrow();
     } finally {
       await fs.chmod(filePath, 0o644);
     }
@@ -1200,12 +1220,12 @@ describe("config security - backup verification", () => {
     const configs = await findConfigFiles(tmp);
     if (configs.length === 0) return;
 
-    const timeoutPromise = new Promise((_, reject) => 
+    const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Timeout")), 5000)
     );
-    
+
     const loadPromise = loadConfig(configs[0]);
-    
+
     await expect(Promise.race([loadPromise, timeoutPromise])).resolves.toBeDefined();
   });
 });

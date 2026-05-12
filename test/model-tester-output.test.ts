@@ -17,7 +17,7 @@ describe("Model Tester CLI - Output Format", () => {
       expect(output).not.toMatch(/^\s*\{/);
     });
 
-    it("accepts --format=json for JSON output", () => {
+    it("accepts --format=json for single-model JSON output", () => {
       const result = spawnSync("bun", [CLI_PATH, "--model", "test-model", "--format", "json"], {
         encoding: "utf-8",
         timeout: 10000,
@@ -49,6 +49,26 @@ describe("Model Tester CLI - Output Format", () => {
 
       expect(result.status).not.toBe(0);
       expect(result.stderr).toMatch(/invalid|error|format/i);
+    });
+
+    it("fails when --format is provided without a value", () => {
+      const result = spawnSync("bun", [CLI_PATH, "--model", "test-model", "--format"], {
+        encoding: "utf-8",
+        timeout: 10000,
+      });
+
+      expect(result.status).not.toBe(0);
+      expect(result.stderr).toMatch(/format/i);
+    });
+
+    it("fails when no mode flags are provided", () => {
+      const result = spawnSync("bun", [CLI_PATH], {
+        encoding: "utf-8",
+        timeout: 10000,
+      });
+
+      expect(result.status).toBe(1);
+      expect(result.stdout).toMatch(/usage:/i);
     });
   });
 });

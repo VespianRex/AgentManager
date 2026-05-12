@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { errorWithCause } from "./types.js";
 
 export const UniqueModelIntricaciesSchema = z.object({
   common_pitfalls: z.array(z.string()),
@@ -27,8 +28,7 @@ export const validateModelMetadata = (metadata: unknown): ModelMetadata => {
   try {
     return RequiredModelMetadataSchema.parse(metadata);
   } catch (error) {
-    console.error("Invalid ModelMetadata:", error);
-    throw new Error("Invalid model metadata");
+    throw errorWithCause("Invalid model metadata", error);
   }
 };
 
@@ -38,8 +38,7 @@ export const validatePartialModelMetadata = (
   try {
     return ModelMetadataSchema.parse(metadata);
   } catch (error) {
-    console.error("Invalid partial ModelMetadata:", error);
-    throw new Error("Invalid model metadata");
+    throw errorWithCause("Invalid model metadata", error);
   }
 };
 

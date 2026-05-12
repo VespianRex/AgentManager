@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "types": ["bun-types"],
+    "target": "ES2022",
     "module": "Node16",
     "moduleResolution": "node16",
     "esModuleInterop": true,
@@ -9,12 +10,11 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "baseUrl": ".",
     "rootDir": "src",
     "outDir": "dist",
-    "paths": {
-      "@agent-manager/*": ["src/*"]
-    }
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
   },
   "include": ["src"]
 }

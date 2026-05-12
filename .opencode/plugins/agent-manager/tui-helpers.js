@@ -1,23 +1,51 @@
+/**
+ * UI helper functions and types for the TUI plugin.
+ *
+ * Provides agent data transformation, default merging, model formatting,
+ * and agent update construction used by the TUI for displaying and editing agent configurations.
+ */
 import { AGENT_REGISTRY } from "./agent-metadata.js";
-function buildDefaultAgents() {
+const ROLE_CODE_MAP = {
+    "main orchestrator": "[O]",
+    "master orchestrator": "[O]",
+    "autonomous deep worker": "[A]",
+    planner: "[P]",
+    "plan consultant": "[V]",
+    explorer: "[X]",
+    "fast codebase exploration": "[X]",
+    "debugging and architecture expert": "[D]",
+    researcher: "[R]",
+    "research and documentation": "[R]",
+    critic: "[C]",
+    "visual and UI inspection": "[U]",
+    visual: "[U]",
+    frontend: "[F]",
+    solver: "[S]",
+    logic: "[L]",
+    creative: "[*]",
+    trivial: "[+]",
+    misc: "[?]",
+    category: "[#]",
+    custom: "[*]",
+};
+export function getRoleCode(role) {
+    return ROLE_CODE_MAP[role] || "[*]";
+}
+const buildFromRegistry = (extract) => {
     const result = {};
     for (const [key, metadata] of Object.entries(AGENT_REGISTRY)) {
-        result[key.toLowerCase()] = {
-            role: metadata.role,
-            description: metadata.description,
-        };
+        result[key.toLowerCase()] = extract(metadata);
     }
     return result;
-}
-function buildDefaultFallbacks() {
-    const result = {};
-    for (const [key, metadata] of Object.entries(AGENT_REGISTRY)) {
-        result[key.toLowerCase()] = metadata.fallback;
-    }
-    return result;
-}
+};
+const buildDefaultAgents = () => buildFromRegistry((m) => ({ role: m.role, description: m.description }));
+const buildDefaultFallbacks = () => buildFromRegistry((m) => m.fallback);
+const buildDefaultHelpTexts = () => buildFromRegistry((m) => m.helpText);
+const buildDefaultTips = () => buildFromRegistry((m) => m.tips);
 export const DEFAULT_AGENTS = buildDefaultAgents();
 export const DEFAULT_FALLBACKS = buildDefaultFallbacks();
+export const DEFAULT_HELP_TEXTS = buildDefaultHelpTexts();
+export const DEFAULT_TIPS = buildDefaultTips();
 export function modelBadge(model) {
     if (!model)
         return "unset";
@@ -44,14 +72,16 @@ export function mergeWithDefaults(loadedConfigs) {
             model: null,
             fallback: DEFAULT_FALLBACKS[agentKey] || [],
             role: info.role,
+            roleCode: getRoleCode(info.role),
             description: info.description,
+            helpText: DEFAULT_HELP_TEXTS[agentKey] || "",
+            tips: DEFAULT_TIPS[agentKey] || [],
             isDefault: true,
         };
     }
     for (const { config, agents, isCategories } of loadedConfigs) {
         for (const [agentKey, agentConfig] of Object.entries(agents)) {
-            if (agentKey === "false" || agentKey === "true")
-                continue;
+            // KISS: Normalize key for lookup, preserve original for display
             const normalizedKey = agentKey.toLowerCase();
             if (merged[normalizedKey]) {
                 merged[normalizedKey].model = agentConfig.model ? modelBadge(agentConfig.model) : merged[normalizedKey].model;
@@ -67,9 +97,12 @@ export function mergeWithDefaults(loadedConfigs) {
                     model: agentConfig.model ? modelBadge(agentConfig.model) : null,
                     fallback: agentConfig.fallback_models || agentConfig.fallback || [],
                     role: isCategories ? "category" : "custom",
+                    roleCode: getRoleCode(isCategories ? "category" : "custom"),
                     isDefault: false,
                     configPath: config.path,
                     isCategory: isCategories,
+                    helpText: isCategories ? `Category agent for ${agentKey} tasks. Routes to the appropriate model based on the oh-my-openagent category configuration.` : `Custom agent "${agentKey}" defined in user configuration.`,
+                    tips: isCategories ? ["Configured via the categories section of oh-my-openagent", "Model and routing determined by category definition"] : ["Custom agent — behavior depends on its model and system prompt configuration"],
                 };
             }
         }
@@ -89,3 +122,4 @@ export function buildAgentUpdate(existingSection, agentKey, newAgent) {
     };
     return updated;
 }
+//# sourceMappingURL=tui-helpers.js.map

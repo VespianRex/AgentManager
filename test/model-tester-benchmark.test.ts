@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "bun:test";
 import { spawnSync } from "child_process";
 import path from "path";
-import { readFile, writeFile, mkdtemp, rm } from "fs/promises";
+import { readFile, writeFile, mkdtemp, rm, symlink } from "fs/promises";
 import { tmpdir } from "os";
 
 const CLI_PATH = path.join(__dirname, "../cli/commands/model-tester.ts");
@@ -83,6 +83,22 @@ describe("Model Tester CLI - Batch Benchmarking", () => {
 
     expect(result.status).not.toBe(0);
     expect(result.stderr).toMatch(/error|invalid|json/i);
+  });
+
+  it("rejects symlinked benchmark config files", async () => {
+    const configContent = JSON.stringify([{ model: "test-model", prompt: "Test" }]);
+    const realConfigPath = path.join(tempDir, "real-config.json");
+    const symlinkPath = path.join(tempDir, "config-link.json");
+    await writeFile(realConfigPath, configContent);
+    await symlink(realConfigPath, symlinkPath);
+
+    const result = spawnSync("bun", [CLI_PATH, "--benchmark", symlinkPath], {
+      encoding: "utf-8",
+      timeout: 10000,
+    });
+
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toMatch(/symlink/i);
   });
 
   it("rejects config that is not an array", async () => {

@@ -162,13 +162,32 @@ describe("ConfigValidation Agent - Invalid Config Injection Tests", () => {
             agent1: { permission: { edit: "invalid1" as unknown as "ask" } },
             agent2: { permission: { bash: "invalid2" as unknown as "ask" } },
             agent3: { permission: { read: "ask", write: "invalid3" as unknown as "ask" } },
+            agent4: { permission: { webfetch: "invalid4" as unknown as "ask", doom_loop: "invalid5" as unknown as "ask" } },
           },
         },
       });
       const result = validationAgent(context);
       assert.strictEqual(result.status, "warning");
       const details = result.details as { permissionProblems: string[] };
-      assert.strictEqual(details.permissionProblems.length, 3);
+      assert.strictEqual(details.permissionProblems.length, 5);
+    });
+
+    it("flags invalid Oh My OpenCode-specific permission keys", () => {
+      const issues = validateAgentPermissions({
+        oracle: {
+          permission: {
+            webfetch: "sometimes",
+            doom_loop: "forever",
+            external_directory: "never",
+          },
+        },
+      });
+
+      assert.deepStrictEqual(issues, [
+        "Agent oracle permission webfetch uses invalid value 'sometimes'.",
+        "Agent oracle permission doom_loop uses invalid value 'forever'.",
+        "Agent oracle permission external_directory uses invalid value 'never'.",
+      ]);
     });
 
     it("detects unknown disabled hooks", () => {
@@ -210,6 +229,48 @@ describe("ConfigValidation Agent - Invalid Config Injection Tests", () => {
       });
       const result = validationAgent(context);
       assert.strictEqual(result.status, "success");
+    });
+
+    it("returns a validation warning when disabled_hooks has the wrong type", () => {
+      const context = createSampleContext({
+        config: {
+          agents: {},
+          disabled_hooks: "comment-checker",
+        } as unknown as SubAgentContext["config"],
+      });
+
+      assert.doesNotThrow(() => validationAgent(context));
+      const result = validationAgent(context);
+      assert.strictEqual(result.status, "warning");
+      const details = result.details as {
+        invalidHooks: string[];
+        permissionProblems: string[];
+        typeProblems: string[];
+      };
+      assert.deepStrictEqual(details.invalidHooks, []);
+      assert.deepStrictEqual(details.permissionProblems, []);
+      assert.deepStrictEqual(details.typeProblems, ["disabled_hooks must be an array of strings."]);
+    });
+
+    it("returns a validation warning when agents has the wrong type", () => {
+      const context = createSampleContext({
+        config: {
+          agents: "oracle",
+          disabled_hooks: [],
+        } as unknown as SubAgentContext["config"],
+      });
+
+      assert.doesNotThrow(() => runSubAgentPipeline(context));
+      const validation = runSubAgentPipeline(context).find((result) => result.name === "ConfigValidation");
+      assert.strictEqual(validation?.status, "warning");
+      const details = validation?.details as {
+        invalidHooks: string[];
+        permissionProblems: string[];
+        typeProblems: string[];
+      };
+      assert.deepStrictEqual(details.invalidHooks, []);
+      assert.deepStrictEqual(details.permissionProblems, []);
+      assert.deepStrictEqual(details.typeProblems, ["agents must be an object."]);
     });
 
     it("handles deeply nested invalid permission structures", () => {
@@ -595,14 +656,20 @@ describe("Permission Check Tests - Various Invalid Values", () => {
 
 describe("Pipeline Error Propagation Tests", () => {
   describe("error propagation between agents", () => {
-    it("throws error when pipeline receives null config", () => {
+    it("handles null config by falling back to safe defaults", () => {
       const context = createSampleContext({ config: null as unknown as SubAgentContext["config"] });
-      assert.throws(() => runSubAgentPipeline(context), /null is not an object/);
+      const results = runSubAgentPipeline(context);
+      assert.strictEqual(results.length, 5);
+      const validation = results.find((r) => r.name === "ConfigValidation");
+      assert.strictEqual(validation?.status, "success");
     });
 
-    it("throws error when pipeline receives undefined config", () => {
+    it("handles undefined config by falling back to safe defaults", () => {
       const context = createSampleContext({ config: undefined as unknown as SubAgentContext["config"] });
-      assert.throws(() => runSubAgentPipeline(context), /undefined is not an object/);
+      const results = runSubAgentPipeline(context);
+      assert.strictEqual(results.length, 5);
+      const validation = results.find((r) => r.name === "ConfigValidation");
+      assert.strictEqual(validation?.status, "success");
     });
 
     it("continues pipeline with empty agents object", () => {

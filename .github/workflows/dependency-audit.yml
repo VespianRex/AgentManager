@@ -1,0 +1,38 @@
+name: Dependency Audit
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 0 * * 0' # Weekly on Sunday at midnight
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: 'latest'
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Run dependency audit
+      run: bun run audit:ci
+
+    - name: Check oh-my-opencode.json configuration
+      run: |
+        if [ -f ".opencode/oh-my-opencode.json" ]; then
+          echo "oh-my-opencode.json found"
+          bun -e "const config = JSON.parse(require('fs').readFileSync('.opencode/oh-my-opencode.json', 'utf8')); console.log('Agents configured:', Object.keys(config.agents || {}).length);"
+        else
+          echo "ERROR: oh-my-opencode.json not found"
+          exit 1
+        fi

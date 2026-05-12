@@ -1,96 +1,49 @@
-import { describe, it, expect } from "bun:test";
-import { readlink, stat, lstat, access } from "fs/promises";
-import path from "path";
-import { homedir } from "os";
+import { describe, it, expect, beforeEach, afterEach } from "bun:test";
+import { readlinkSync, realpathSync, lstatSync, existsSync } from "fs";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 
-describe("Global Plugin Symlink - TDD Infrastructure Verification", () => {
-  const GLOBAL_PLUGIN_PATH = path.join(
-    homedir(),
-    ".config/opencode/plugins/agent-manager.js"
-  );
-  
-  // Use absolute path for project plugin
-  const PROJECT_PLUGIN_PATH = "/Volumes/Kingston XS1000 Media - Data/macOS-relocated/dev/AgentManager/.opencode/plugins/agent-manager/index.js";
+describe("Global Plugin Symlink", () => {
+  let tempHome: string;
+  let globalPluginPath: string;
+  let expectedTarget: string;
 
-  describe("Symlink Existence", () => {
-    it("symlink exists in global plugins directory", async () => {
-      const stats = await lstat(GLOBAL_PLUGIN_PATH);
-      expect(stats.isSymbolicLink()).toBe(true);
-    });
+  beforeEach(async () => {
+    tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-global-plugin-"));
+    expectedTarget = path.resolve(process.cwd(), ".opencode", "plugins", "agent-manager.js");
+    globalPluginPath = path.join(tempHome, ".config", "opencode", "plugins", "agent-manager.js");
 
-    it("symlink is accessible", async () => {
-      let accessible = false;
-      try {
-        await access(GLOBAL_PLUGIN_PATH);
-        accessible = true;
-      } catch {
-        // File not accessible
-      }
-      expect(accessible).toBe(true);
-    });
+    await fs.mkdir(path.dirname(globalPluginPath), { recursive: true });
+    await fs.symlink(expectedTarget, globalPluginPath);
   });
 
-  describe("Symlink Target", () => {
-    it("symlink points to correct project file", async () => {
-      const target = await readlink(GLOBAL_PLUGIN_PATH);
-      expect(target).toBe(PROJECT_PLUGIN_PATH);
-    });
-
-    it("symlink target is resolvable", async () => {
-      const target = await readlink(GLOBAL_PLUGIN_PATH);
-      const resolved = path.resolve(path.dirname(GLOBAL_PLUGIN_PATH), target);
-      const targetStats = await stat(resolved);
-      expect(targetStats.isFile()).toBe(true);
-    });
-
-    it("symlink target file exists and is readable", async () => {
-      const target = await readlink(GLOBAL_PLUGIN_PATH);
-      const resolved = path.resolve(path.dirname(GLOBAL_PLUGIN_PATH), target);
-      
-      let accessible = false;
-      try {
-        await access(resolved);
-        accessible = true;
-      } catch {
-        // File not accessible
-      }
-      expect(accessible).toBe(true);
-    });
+  afterEach(async () => {
+    await fs.rm(tempHome, { recursive: true, force: true });
   });
 
-  describe("Plugin Loading", () => {
-    it("symlink target exports valid plugin structure", async () => {
-      const target = await readlink(GLOBAL_PLUGIN_PATH);
-      const resolved = path.resolve(path.dirname(GLOBAL_PLUGIN_PATH), target);
-      
-      // Import the plugin file (index.js re-exports from plugin.js)
-      const plugin = await import(resolved);
-      
-      // Verify it has expected exports (server export for AgentManagerPlugin)
-      expect(plugin).toBeDefined();
-      // The index.js exports 'server' which is AgentManagerPlugin renamed
-      expect(plugin.server).toBeDefined();
-      expect(typeof plugin.server).toBe("function");
-    });
-
-    it("plugin export is async function", async () => {
-      const target = await readlink(GLOBAL_PLUGIN_PATH);
-      const resolved = path.resolve(path.dirname(GLOBAL_PLUGIN_PATH), target);
-      const plugin = await import(resolved);
-      
-      expect(plugin.server).toBeDefined();
-      expect(typeof plugin.server).toBe("function");
-    });
+  it("creates a symlinked global plugin wrapper", () => {
+    expect(existsSync(globalPluginPath)).toBe(true);
+    expect(lstatSync(globalPluginPath).isSymbolicLink()).toBe(true);
   });
 
-  describe("Deployment Verification", () => {
-    it("deploy-plugin script output matches symlink target", async () => {
-      // Verify the symlink points to where deploy-plugin would deploy
-      const expectedDeployPath = PROJECT_PLUGIN_PATH;
-      const target = await readlink(GLOBAL_PLUGIN_PATH);
-      const resolved = path.resolve(path.dirname(GLOBAL_PLUGIN_PATH), target);
-      
-      expect(resolved).toBe(expectedDeployPath);
-    });
+  it("points the symlink at the deployed plugin entry", () => {
+    expect(readlinkSync(globalPluginPath)).toBe(expectedTarget);
+    expect(realpathSync(globalPluginPath)).toBe(expectedTarget);
+    expect(existsSync(realpathSync(globalPluginPath))).toBe(true);
+  });
+
+  it("keeps the symlink in the expected global plugins directory", () => {
+    const globalDir = path.join(tempHome, ".config", "opencode", "plugins");
+    expect(globalPluginPath.startsWith(globalDir)).toBe(true);
+    expect(readlinkSync(globalPluginPath)).toContain(".opencode/plugins/agent-manager.js");
+  });
+
+  it("loads the plugin from the symlink path", async () => {
+    const plugin = await import(globalPluginPath);
+    expect(plugin.server).toBeDefined();
+
+    const instance = await plugin.server({ directory: process.cwd() });
+    expect(instance.tool.agent_manager).toBeDefined();
   });
 });

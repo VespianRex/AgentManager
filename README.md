@@ -59,13 +59,13 @@ ModelTester helps you:
    ModelTester works out of the box with default settings. For custom API clients:
    ```typescript
    import { createModelTester } from "./src/model-tester";
-   
+
    const customClient = {
      sendPrompt: async (request) => {
        // Your custom API implementation
      }
    };
-   
+
    const tester = createModelTester({ apiClient: customClient });
    ```
 
@@ -370,10 +370,126 @@ ModelTester includes optimized settings for 5 popular models:
     "timeoutMs": 45000
   }
 }
-```
+}
+}
+
+## Troubleshooting
+
+### Common Issues and Solutions
+
+#### Plugin Not Loading
+
+**Symptoms**: Agent Manager commands don't appear in the command palette.
+
+**Solutions**:
+1. Verify the plugin is properly deployed:
+   ```bash
+   ls -la ~/.config/opencode/plugins/agent-manager
+   ```
+   Should be a symlink to the dist directory.
+
+2. Check that `~/.config/opencode/tui.json` includes the plugin:
+   ```json
+   {
+     "plugin": [
+       "path/to/.opencode/tui/agent-manager.jsx"
+     ]
+   }
+   ```
+
+3. Restart OpenCode completely.
+
+#### Config File Not Found
+
+**Symptoms**: "No config found" errors or empty agent list.
+
+**Solutions**:
+1. Ensure config file exists at one of these locations:
+   - `.opencode/oh-my-opencode.json` (project level)
+   - `.opencode/opencode.json` (project level)
+   - `~/.config/opencode/oh-my-opencode.json` (user level)
+   - `~/.config/opencode/config.json` (user level)
+
+2. Check file permissions (must be readable):
+   ```bash
+   chmod 644 ~/.config/opencode/*.json
+   ```
+
+#### API Key Not Found
+
+**Symptoms**: Benchmarking fails with "No API key configured" error.
+
+**Solutions**:
+1. Set the appropriate environment variable for your provider:
+   - OpenAI: `OPENAI_API_KEY`
+   - Anthropic: `ANTHROPIC_API_KEY`
+   - Google: `GOOGLE_API_KEY`
+   - DeepSeek: `DEEPSEEK_API_KEY`
+
+2. Verify the key is accessible:
+   ```bash
+   echo $ANTHROPIC_API_KEY
+   ```
+
+#### Build/Deployment Errors
+
+**Symptoms**: Build fails or deployed plugin doesn't work.
+
+**Solutions**:
+1. Clean rebuild:
+   ```bash
+   bun run build && bun run deploy-plugin && bun run smoke
+   ```
+
+2. Check TypeScript compilation:
+   ```bash
+   bun run tsc --noEmit
+   ```
+
+#### TUI Crashes on Launch
+
+**Symptoms**: TUI closes immediately or shows errors.
+
+**Solutions**:
+1. Check the security log for clues:
+   ```bash
+   cat ~/.config/opencode/agent-manager-security.log
+   ```
+
+2. Verify JSX runtime is available (required for TUI):
+   ```bash
+   ls node_modules/@opentui/solid/
+   ```
+
+3. Try the CLI instead if TUI continues to fail:
+   ```bash
+   bun cli/index.ts inspect
+   ```
+
+#### Memory Issues with Large Configs
+
+**Symptoms**: Slow performance or crashes with 1000+ agents.
+
+**Solutions**:
+1. Reduce cache TTL in config:
+   ```bash
+   # Config files >10MB are rejected to prevent memory exhaustion
+   # Ensure no single config exceeds this limit
+   ```
+
+2. Split large configs into multiple category files.
+
+### Error Messages Reference
+
+| Error Message | Cause | Solution |
+|---------------|-------|----------|
+| `Path traversal detected` | Security block on path escaping home | Use valid paths within home directory |
+| `Security violation: symlinks not allowed` | Config file is a symlink | Replace symlink with actual file |
+| `Config file too large` | File exceeds 10MB limit | Reduce config size or split into multiple files |
+| `JSONC parse error` | Malformed JSON/JSONC syntax | Check file for syntax errors, especially comments |
+| `No API key for 'provider'` | Missing environment variable | Set appropriate API key env var |
 
 ## Running tests
-
 - `bun run test` — run the full test suite
 - `bun run smoke` — run the smoke test
 - `bun run e2e` — run the end-to-end plugin behavior test

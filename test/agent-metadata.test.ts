@@ -1,7 +1,7 @@
 /// <reference types="bun-types" />
 import { describe, it, expect } from 'bun:test';
-import { AgentMetadata, getOhMyOpenCodeAgents, getTaskMasterAgents, getAllFallbackChains, AGENT_REGISTRY } from '../src/agent-metadata';
-import { MODEL_METADATA_REGISTRY } from '../src/model-metadata';
+import { AgentMetadata, getOhMyOpenCodeAgents, getTaskMasterAgents, getAllFallbackChains, AGENT_REGISTRY } from '../src/agent-metadata.js';
+import { MODEL_METADATA_REGISTRY } from '../src/model-metadata.js';
 
 describe('agent-metadata', () => {
   describe('getOhMyOpenCodeAgents', () => {

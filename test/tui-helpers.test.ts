@@ -75,7 +75,7 @@ describe("shortenModel", () => {
 describe("mergeWithDefaults", () => {
   it("returns default agents when no configs are provided", () => {
     const result = mergeWithDefaults([]);
-    
+
     expect(Object.keys(result).length).toBeGreaterThan(0);
     expect(result["sisyphus"]).toBeDefined();
     expect(result["sisyphus"].isDefault).toBe(true);
@@ -146,12 +146,12 @@ describe("mergeWithDefaults", () => {
     expect(result["ultrabrain"].isCategory).toBe(true);
   });
 
-  it("ignores 'false' and 'true' as agent keys", () => {
+  it("includes agents named 'false' and 'true' (valid agent names)", () => {
     const loadedConfigs: LoadedConfig[] = [
       makeLoadedConfig({
         agents: {
-          false: { model: "should-be-ignored" },
-          true: { model: "should-be-ignored" },
+          false: { model: "valid-false" },
+          true: { model: "valid-true" },
           sisyphus: { model: "valid" },
         },
       }),
@@ -159,8 +159,11 @@ describe("mergeWithDefaults", () => {
 
     const result = mergeWithDefaults(loadedConfigs);
 
-    expect(result["false"]).toBeUndefined();
-    expect(result["true"]).toBeUndefined();
+    // Agents named "false" and "true" are now correctly included
+    expect(result["false"]).toBeDefined();
+    expect(result["false"].model).toBe("valid-false");
+    expect(result["true"]).toBeDefined();
+    expect(result["true"].model).toBe("valid-true");
     expect(result["sisyphus"].model).toBe("valid");
   });
 
@@ -169,7 +172,7 @@ describe("mergeWithDefaults", () => {
       {
         config: { path: "/test/opencode.json", source: "project" },
         agents: {
-          sisyphus: { 
+          sisyphus: {
             model: "test-model",
             fallback_models: ["anthropic", "openai", "google"]
           },
@@ -188,7 +191,7 @@ describe("mergeWithDefaults", () => {
       {
         config: { path: "/test/opencode.json", source: "project" },
         agents: {
-          sisyphus: { 
+          sisyphus: {
             model: "test-model",
             fallback: ["provider1", "provider2"]
           },
@@ -297,7 +300,7 @@ describe("buildAgentUpdate", () => {
 
     const result = buildAgentUpdate(existing, "sisyphus", { model: "new" });
 
-    expect(result["sisyphus"].extra).toBe("field");
+    expect((result["sisyphus"] as any).extra).toBe("field");
   });
 });
 

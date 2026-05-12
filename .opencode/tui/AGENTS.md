@@ -15,7 +15,7 @@ JSX-based TUI plugin using `@opentui/solid` for the Agent Manager UI in OpenCode
 - **Default export**: Must have `id` + EITHER `server` OR `tui`, never both.
 
 ## KNOWN ISSUES
-- **DialogSelect selection broken**: Options show but clicks do nothing. Tried `onSelect` patterns (per-option + top-level). PluginManager uses `rows`/`value`/`onValueChange` - may need different API.
+- **DialogSelect selection broken**: Options show but clicks do nothing. OpenCode's own dialogs use per-option `onSelect` on each entry, plus a guarded top-level callback fallback. Keep that pattern if you add new panes.
 - **Build overwrites**: Manual edits to JSX lost if project rebuilds.
 
 ## LOADING

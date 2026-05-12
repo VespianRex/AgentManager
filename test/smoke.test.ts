@@ -11,6 +11,7 @@ const SAMPLE = `{
 
 const CLI_PATH = path.join(__dirname, "../cli/index.ts");
 const MODEL_TESTER_PATH = path.join(__dirname, "../cli/commands/model-tester.ts");
+const SERVICE_MODEL_TESTER_PATH = path.join(__dirname, "../src/services/model-tester/model-tester.ts");
 
 describe("smoke test", () => {
   it("creates a config file and finds it", async () => {
@@ -96,25 +97,25 @@ describe("CLI smoke tests", () => {
 
 describe("ModelTester module smoke tests", () => {
   it("can import ModelTester class", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     expect(ModelTester).toBeDefined();
     expect(typeof ModelTester).toBe("function");
   });
 
   it("can import createModelTester factory", async () => {
-    const { createModelTester } = await import("../src/model-tester.js");
+    const { createModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     expect(createModelTester).toBeDefined();
     expect(typeof createModelTester).toBe("function");
   });
 
   it("can instantiate with default options", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     expect(tester).toBeInstanceOf(ModelTester);
   });
 
   it("can instantiate with custom options", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const customTokenCounter = (text: string) => text.length;
     const tester = new ModelTester({
       tokenCounter: customTokenCounter,
@@ -126,7 +127,7 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("start/stop timing works", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     tester.start();
     await new Promise(resolve => setTimeout(resolve, 10));
@@ -135,7 +136,7 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("countTokens works with default counter", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     const count = tester.countTokens("Hello world test");
     expect(typeof count).toBe("number");
@@ -143,27 +144,27 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("countTokens handles empty string", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     expect(tester.countTokens("")).toBe(0);
     expect(tester.countTokens("   ")).toBe(0);
   });
 
   it("calculateThroughput returns correct value", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     const throughput = tester.calculateThroughput(100, 1000);
     expect(throughput).toBe(100);
   });
 
   it("calculateThroughput handles zero elapsed", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     expect(tester.calculateThroughput(100, 0)).toBe(0);
   });
 
   it("createCancellationToken returns valid token", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     const token = tester.createCancellationToken();
     expect(token.isCancellationRequested).toBe(false);
@@ -172,7 +173,7 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("cancellation token can be cancelled", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     const token = tester.createCancellationToken();
     expect(token.isCancellationRequested).toBe(false);
@@ -181,7 +182,7 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("cancellation token calls callbacks on cancel", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     const token = tester.createCancellationToken();
     let callbackCalled = false;
@@ -193,14 +194,14 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("isRequestInFlight returns false initially", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     expect(tester.isRequestInFlight()).toBe(false);
     expect(tester.getActiveRequestCount()).toBe(0);
   });
 
   it("reset clears state", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     tester.start();
     tester.reset();
@@ -208,13 +209,13 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("createModelTester factory works", async () => {
-    const { createModelTester, ModelTester } = await import("../src/model-tester.js");
+    const { createModelTester, ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = createModelTester();
     expect(tester).toBeInstanceOf(ModelTester);
   });
 
   it("measureResponseTimeSync works", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     const measured = tester.measureResponseTimeSync(() => 42);
     expect(measured.result).toBe(42);
@@ -222,7 +223,7 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("measureResponseTime works with sync function", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester({ includeTimestamps: true });
     const measured = await tester.measureResponseTime(() => "sync result");
     expect(measured.result).toBe("sync result");
@@ -232,7 +233,7 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("measureResponseTime works with async function", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester();
     const measured = await tester.measureResponseTime(async () => {
       await new Promise(resolve => setTimeout(resolve, 10));
@@ -243,7 +244,7 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("sendTestPrompt works with mock client", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
 
     const mockClient = {
       sendPrompt: async (request: any) => {
@@ -269,7 +270,7 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("sendTestPrompt handles API errors gracefully", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
 
     const failingClient = {
       sendPrompt: async () => {
@@ -288,13 +289,13 @@ describe("ModelTester module smoke tests", () => {
   });
 
   it("respects maxTimeoutMs option", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester({ maxTimeoutMs: 5000 });
     expect(tester.getMaxTimeoutMs()).toBe(5000);
   });
 
   it("caps maxTimeoutMs at internal limit", async () => {
-    const { ModelTester } = await import("../src/model-tester.js");
+    const { ModelTester } = await import(SERVICE_MODEL_TESTER_PATH);
     const tester = new ModelTester({ maxTimeoutMs: 120000 });
     expect(tester.getMaxTimeoutMs()).toBeLessThanOrEqual(60000);
   });

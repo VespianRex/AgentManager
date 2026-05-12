@@ -1,5 +1,5 @@
-import { describe, it } from "bun:test";
-import assert from "bun:assert";
+import { describe, it, beforeEach } from "bun:test";
+import assert from "node:assert";
 import os from "node:os";
 import path from "node:path";
 import fs from "node:fs/promises";
@@ -12,7 +12,16 @@ const SAMPLE = `{
   "disabled_hooks": ["comment-checker"]
 }`;
 
-describe("e2e plugin behavior", () => {
+// Helper to provide unique IDs for test isolation
+let testCounter = 0;
+const getUniqueId = () => `test-config-${Date.now()}-${++testCounter}`;
+
+describe("Agent Manager E2E", () => {
+  // Test isolation - reset counter each test
+  beforeEach(() => {
+    testCounter++;
+  });
+
   it("runs the plugin and returns system overview and checks", async () => {
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "agent-manager-e2e-"));
     const configPath = path.join(tmp, "opencode.json");
@@ -30,7 +39,10 @@ describe("e2e plugin behavior", () => {
       ask: async () => {},
     });
     const inspect = typeof raw === "string" ? JSON.parse(raw) : raw;
+    // plugin returns { message, configPath, summary, editable, systemOverview, checks }
     assert.strictEqual(inspect.configPath, configPath);
+    assert.ok(inspect.summary);
+    assert.ok(inspect.systemOverview);
     assert.ok(Array.isArray(inspect.checks));
     const validation = inspect.checks.find((item: any) => item.name === "ConfigValidation");
     assert.ok(validation);

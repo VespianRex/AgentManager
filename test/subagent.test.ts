@@ -15,7 +15,32 @@ import {
 // Mock the agentSystem module to control getSystemOverview output
 vi.mock("../src/agentSystem.js", () => ({
   getSystemOverview: vi.fn().mockReturnValue({
-    agents: { explore: "test", oracle: "test" },
+    agents: {
+      explore: {
+        role: "test role",
+        description: "test description",
+        helpText: "test help",
+        tips: ["tip1"],
+        fallback: ["oracle"],
+        context_window_size: 128000,
+        recommended_top_k: 40,
+        recommended_top_p: 0.9,
+        prompting_style_guidelines: "test guidelines",
+        unique_model_intricacies: { reasoning: false, function_calling: false },
+      },
+      oracle: {
+        role: "oracle role",
+        description: "oracle description",
+        helpText: "oracle help",
+        tips: ["tip2"],
+        fallback: [],
+        context_window_size: 128000,
+        recommended_top_k: 40,
+        recommended_top_p: 0.9,
+        prompting_style_guidelines: "oracle guidelines",
+        unique_model_intricacies: { reasoning: false, function_calling: false },
+      },
+    },
     fallbackChains: { explore: ["oracle"] },
     categoryChains: {},
     permissions: { explore: { edit: "ask" } },
@@ -55,7 +80,7 @@ describe("Individual Agent Function Tests", () => {
     it("returns success with correct agent and category counts", () => {
       const context = createBaseContext({});
       const result = discoveryAgent(context);
-      
+
       expect(result.name).toBe("ConfigDiscovery");
       expect(result.status).toBe("success");
       expect(result.message).toContain("2 agents");
@@ -71,7 +96,7 @@ describe("Individual Agent Function Tests", () => {
         summary: { ...baseContext.summary, agentCount: 0, categories: 0 }
       };
       const result = discoveryAgent(context);
-      
+
       expect(result.message).toContain("0 agents");
       expect(result.message).toContain("0 categories");
     });
@@ -79,7 +104,7 @@ describe("Individual Agent Function Tests", () => {
     it("handles different source types", () => {
       const context = createBaseContext({ source: "opencode" });
       const result = discoveryAgent(context);
-      
+
       expect(result.message).toContain("opencode");
     });
   });
@@ -88,7 +113,7 @@ describe("Individual Agent Function Tests", () => {
     it("returns success with system overview details", () => {
       const context = createBaseContext({});
       const result = systemExplanationAgent(context);
-      
+
       expect(result.name).toBe("SystemExplanation");
       expect(result.status).toBe("success");
       expect(result.message).toContain("Explained agent roles");
@@ -101,7 +126,7 @@ describe("Individual Agent Function Tests", () => {
     it("returns consistent structure regardless of input", () => {
       const context = createBaseContext({});
       const result = systemExplanationAgent(context);
-      
+
       expect(result.status).toBe("success");
       expect(typeof result.details).toBe("object");
     });
@@ -116,7 +141,7 @@ describe("Individual Agent Function Tests", () => {
         },
       } as any);
       const result = validationAgent(context);
-      
+
       expect(result.name).toBe("ConfigValidation");
       expect(result.status).toBe("success");
       expect(result.message).toContain("valid");
@@ -130,7 +155,7 @@ describe("Individual Agent Function Tests", () => {
         },
       } as any);
       const result = validationAgent(context);
-      
+
       expect(result.status).toBe("warning");
       expect(result.message).toContain("validation issues");
       const details = result.details as { invalidHooks: string[]; permissionProblems: string[] };
@@ -146,11 +171,28 @@ describe("Individual Agent Function Tests", () => {
         } as any,
       });
       const result = validationAgent(context);
-      
+
       expect(result.status).toBe("warning");
       expect(result.message).toContain("validation issues");
       const details = result.details as { invalidHooks: string[]; permissionProblems: string[] };
       expect(details.permissionProblems.length).toBeGreaterThan(0);
+    });
+
+    it("returns warning when disabled agent and skill lists have the wrong type", () => {
+      const context = createBaseContext({
+        config: {
+          agents: {},
+          disabled_hooks: [],
+          disabled_agents: "oracle",
+          disabled_skills: [123, "frontend-ui-ux"],
+        } as any,
+      });
+      const result = validationAgent(context);
+
+      expect(result.status).toBe("warning");
+      const details = result.details as { typeProblems: string[] };
+      expect(details.typeProblems).toContain("disabled_agents must be an array of strings.");
+      expect(details.typeProblems).toContain("disabled_skills must be an array of strings.");
     });
   });
 
@@ -163,7 +205,7 @@ describe("Individual Agent Function Tests", () => {
         },
       } as any);
       const result = orchestrationAgent(context);
-      
+
       expect(result.name).toBe("OrchestrationReview");
       expect(result.status).toBe("success");
       expect(result.message).toContain("present");
@@ -180,7 +222,7 @@ describe("Individual Agent Function Tests", () => {
         },
       } as any);
       const result = orchestrationAgent(context);
-      
+
       expect(result.status).toBe("success");
       expect(result.message).toContain("background_task settings are missing");
       const details = result.details as { sisyphus: string | null; background_task: string | null };
@@ -200,7 +242,7 @@ describe("Individual Agent Function Tests", () => {
         },
       } as any);
       const result = instructionFollowAgent(context);
-      
+
       expect(result.name).toBe("InstructionFollowReview");
       expect(result.status).toBe("success");
       expect(result.message).toContain("KISS/DRY");
@@ -218,7 +260,7 @@ describe("Individual Agent Function Tests", () => {
         },
       } as any);
       const result = instructionFollowAgent(context);
-      
+
       expect(result.status).toBe("warning");
       expect(result.message).toContain("repeated prompt_append");
       expect(result.message).toContain("agent2");
@@ -241,7 +283,7 @@ describe("Error Injection Tests", () => {
       });
       const results = runSubAgentPipeline(context);
       const validation = results.find((r) => r.name === "ConfigValidation");
-      
+
       expect(validation?.status).toBe("warning");
       const details = validation?.details as { permissionProblems: string[] };
       expect(details.permissionProblems.length).toBe(4);
@@ -256,7 +298,7 @@ describe("Error Injection Tests", () => {
       } as any);
       const results = runSubAgentPipeline(context);
       const validation = results.find((r) => r.name === "ConfigValidation");
-      
+
       expect(validation?.status).toBe("warning");
       const details = validation?.details as { invalidHooks: string[] };
       expect(details.invalidHooks.length).toBe(50);
@@ -275,7 +317,7 @@ describe("Error Injection Tests", () => {
       });
       const results = runSubAgentPipeline(context);
       const validation = results.find((r) => r.name === "ConfigValidation");
-      
+
       expect(validation?.status).toBe("warning");
       const details = validation?.details as { permissionProblems: string[] };
       expect(details.permissionProblems.length).toBe(1);
@@ -290,7 +332,7 @@ describe("Error Injection Tests", () => {
       });
       const results = runSubAgentPipeline(context);
       const validation = results.find((r) => r.name === "ConfigValidation");
-      
+
       expect(validation?.status).toBe("warning");
     });
 
@@ -303,7 +345,7 @@ describe("Error Injection Tests", () => {
       });
       const results = runSubAgentPipeline(context);
       const validation = results.find((r) => r.name === "ConfigValidation");
-      
+
       expect(validation?.status).toBe("warning");
     });
   });
@@ -322,7 +364,7 @@ describe("Error Injection Tests", () => {
       });
       const results = runSubAgentPipeline(context);
       const instruction = results.find((r) => r.name === "InstructionFollowReview");
-      
+
       expect(instruction?.status).toBe("warning");
     });
 
@@ -339,7 +381,7 @@ describe("Error Injection Tests", () => {
       const results = runSubAgentPipeline(context);
       const validation = results.find((r) => r.name === "ConfigValidation");
       const instruction = results.find((r) => r.name === "InstructionFollowReview");
-      
+
       expect(validation?.status).toBe("warning");
       expect(instruction?.status).toBe("warning");
     });
@@ -537,7 +579,7 @@ describe("Individual 5-agent function error propagation", () => {
     const context = createBaseContext({ config: null as any });
     const result = validationAgent(context);
     expect(result.status).toBe("success");
-    expect(result.details).toEqual({ invalidHooks: [], permissionProblems: [] });
+    expect(result.details).toEqual({ invalidHooks: [], permissionProblems: [], typeProblems: [] });
   });
 
   it("validationAgent handles undefined config object", () => {
@@ -576,7 +618,9 @@ describe("Individual 5-agent function error propagation", () => {
         disabled_hooks: "not-array" as any,
       } as any,
     });
-    expect(() => validationAgent(context)).toThrow();
+    const result = validationAgent(context);
+    expect(result.status).toBe("warning");
+    expect(result.details.typeProblems).toContain("disabled_hooks must be an array of strings.");
   });
 
   it("orchestrationAgent handles missing sisyphus and background", () => {
@@ -837,7 +881,7 @@ describe("Individual 5-agent function error propagation", () => {
   it("handles extremely large configs efficiently", () => {
     const agents: Record<string, any> = {};
     for (let i = 0; i < 1000; i++) {
-      agents[`agent${i}`] = { 
+      agents[`agent${i}`] = {
         permission: { edit: "ask", bash: "allow", read: "deny", write: "ask" },
         prompt_append: `prompt${i % 100}`
       };

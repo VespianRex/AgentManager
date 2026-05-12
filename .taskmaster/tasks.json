@@ -1,0 +1,156 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Fix failing agentSystem tests",
+        "description": "Update imports in test/agentSystem.test.ts to use non-deprecated APIs. The tests are currently failing due to deprecated exports in agentSystem.ts.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "details": "The agentSystem.test.ts file has 18 lines and contains failing tests. The issue is that agentSystem.ts exports deprecated wrappers. Update the test to import from the correct, non-deprecated modules. This is the first step to establish a green safety net before making other changes.\n\nFiles to check:\n- test/agentSystem.test.ts\n- src/agentSystem.ts\n\nExpected: All tests should pass after fixing imports.",
+        "testStrategy": "Run `bun run test` and verify that agentSystem tests pass. Check that no tests are failing due to deprecated API usage."
+      },
+      {
+        "id": 2,
+        "title": "Remove duplicate test code in schema.test.ts",
+        "description": "Delete duplicate `it` blocks in test/schema.test.ts (lines 60-218). The file contains 1224 lines with duplicated test cases that need cleanup.",
+        "status": "pending",
+        "dependencies": [1],
+        "priority": "high",
+        "details": "The schema.test.ts file has extensive duplicate test code from lines 60-218. Remove the redundant test blocks while preserving test coverage. This reduces maintenance burden and improves test clarity.\n\nAction items:\n- Identify duplicate `it` blocks\n- Remove redundant tests while keeping unique test cases\n- Ensure test coverage remains adequate\n- Verify no functionality is lost",
+        "testStrategy": "Run `bun run test` and confirm all schema tests still pass. Check that test count is reasonable and no critical edge cases were removed."
+      },
+      {
+        "id": 3,
+        "title": "Fix empty catch block in model-tester.ts",
+        "description": "Replace empty catch block at lines 181-183 in src/model-tester.ts with proper error logging. Currently the catch block is empty, which swallows errors silently.",
+        "status": "pending",
+        "dependencies": [2],
+        "priority": "high",
+        "details": "In src/model-tester.ts, there is an empty catch block at lines 181-183. This is a zero-risk fix with immediate gain. Replace with:\n\n```typescript\ncatch (e) {\n  console.error('Model tester error:', e);\n  throw e; // or handle appropriately\n}\n```\n\nThis ensures errors are visible during debugging and don't get silently ignored.",
+        "testStrategy": "Review the modified code to ensure errors are now logged. Run existing tests to verify no regressions. Consider adding a test that triggers this error path to confirm it logs correctly."
+      },
+      {
+        "id": 4,
+        "title": "Fix type safety in schema.ts (line 90)",
+        "description": "Replace `as any` at line 90 in src/schema.ts with proper generic constraint: `<T extends ZodType>`. This eliminates a type safety issue in Zod validation.",
+        "status": "pending",
+        "dependencies": [3],
+        "priority": "medium",
+        "details": "At line 90 in src/schema.ts, there is an `as any` assertion that weakens type safety. The function likely involves Zod validation. Apply a generic constraint `<T extends ZodType>` to maintain type safety without losing functionality.\n\nResearch from best practices:\n- Use TypeScript 4.9+ `satisfies` operator where applicable\n- Consider assertion functions or type guards\n- Avoid double assertions without validation\n\nThis is a low-risk change that improves compile-time safety.",
+        "testStrategy": "Run TypeScript compiler (`tsc`) to ensure no type errors. Run tests to verify functionality unchanged. Check that the generic constraint properly captures the intended types."
+      },
+      {
+        "id": 5,
+        "title": "Fix type safety in tui.ts (line 29)",
+        "description": "Replace `as any` at line 29 in src/tui.ts (3 parameters) with proper SolidJS Component<> typing. This is a low-risk type safety improvement.",
+        "status": "pending",
+        "dependencies": [3],
+        "priority": "medium",
+        "details": "At line 29 in src/tui.ts, there are three parameters using `as any`. This relates to SolidJS TUI command registration. Apply proper SolidJS component typing using `Component<>` or appropriate SolidJS types.\n\nSolidJS typing patterns:\n- Use `Component` from 'solid-js' for component props\n- Use proper event handler types\n- Leverage SolidJS's type inference where possible\n\nThis is a straightforward typing fix with minimal risk.",
+        "testStrategy": "Run TypeScript compiler to verify types are correct. Test TUI functionality if applicable. Ensure no runtime errors introduced."
+      },
+      {
+        "id": 6,
+        "title": "Implement LRU cache in config.ts",
+        "description": "Add inline LRU caching mechanism to src/config.ts to cache config file reads. This improves performance and enables safe parallelization of findConfigFiles.",
+        "status": "pending",
+        "dependencies": [4, 5],
+        "priority": "medium",
+        "details": "Currently config.ts has no caching and performs sequential scanning (lines 79-97). Implement an LRU cache using either:\n\nOption A: Simple Map-based LRU (no new dependencies)\n- Use Map with insertion order tracking\n- Implement size limit and TTL\n- ~15 lines of code\n\nOption B: Use lru-cache npm package\n- Install `lru-cache` v11+\n- Leverage built-in TTL and size limits\n- More feature-rich\n\nRecommendation: Start with simple Map-based LRU to avoid new dependencies. Cache key: normalized config path. Cache value: parsed config with timestamp.\n\nIntegration points:\n- readJsoncFile: check cache first\n- findConfigFiles: cache directory listings\n- Invalidate on writes (backupConfig already creates new files)",
+        "testStrategy": "Add tests for LRU cache behavior: eviction, TTL expiry, hit/miss rates. Benchmark performance improvement. Verify cache invalidation on config writes."
+      },
+      {
+        "id": 7,
+        "title": "Parallelize findConfigFiles using Promise.all",
+        "description": "Update sequential file scanning in src/config.ts (lines 79-97) to use Promise.all for concurrent directory reads. This should be done AFTER LRU cache is in place.",
+        "status": "pending",
+        "dependencies": [6],
+        "priority": "medium",
+        "details": "The findConfigFiles function currently scans directories sequentially. After implementing the LRU cache, parallelize the file system operations using Promise.all. This is an idiomatic change with low risk.\n\nCurrent pattern:\n```typescript\nfor (const dir of dirs) {\n  const files = await readDir(dir);\n  // process files\n}\n\nImproved pattern:\n```typescript\nconst results = await Promise.all(\n  dirs.map(dir => readDir(dir))\n);\n// process results\n```\n\nConsiderations:\n- Ensure error handling for individual directory failures\n- Maintain order if needed (use map with indices)\n- Cache benefits compound with parallel reads\n- No need for p-limit if directory count is small (< 10)",
+        "testStrategy": "Verify that findConfigFiles returns same results as before. Benchmark performance improvement. Test error handling when some directories are unreadable."
+      },
+      {
+        "id": 8,
+        "title": "Fix plugin.ts type safety with discriminated union",
+        "description": "Replace `as any` assertions in src/plugin.ts (lines 49, 56, 70, 77) with a discriminated union type and type guards. This is the most complex type fix but eliminates a documented bug class.",
+        "status": "pending",
+        "dependencies": [4],
+        "priority": "high",
+        "details": "plugin.ts has multiple `as any` assertions (lines 49, 56, 70, 77). This relates to the async plugin factory and tool definition. The recommended approach is to create a discriminated union type for plugin exports and implement type guards.\n\nSteps:\n1. Analyze the different plugin shapes (server, tui, etc.)\n2. Create a union type with a discriminant property (e.g., `type: 'server' | 'tui'`)\n3. Implement type guard functions: `isServerPlugin()`, `isTuiPlugin()`\n4. Replace `as any` with proper type narrowing\n\nThis is a medium-risk change that requires careful analysis of plugin loading patterns. Refer to OpenCode plugin loading rules in AGENTS.md.\n\nNote: This is the last type fix to implement because it's the most complex and depends on understanding the full plugin system.",
+        "testStrategy": "Run comprehensive test suite to ensure plugin loading still works. Test both server and TUI plugin scenarios. Verify type safety improvements with tsc --noEmit."
+      },
+      {
+        "id": 9,
+        "title": "Implement centralized error handling utility",
+        "description": "Create a centralized error handling module with custom AppError base class, error factory, and error categorization. This improves consistency across the codebase.",
+        "status": "pending",
+        "dependencies": [3],
+        "priority": "medium",
+        "details": "Research shows the codebase lacks a centralized error utility. Create `src/error-utils.ts` with:\n\n1. AppError base class extending Error\n   - Include `cause` property for error chaining\n   - Implement `toJSON()` for serialization\n   - Use `Error.captureStackTrace` for better debugging\n\n2. Error factory function\n   - `createError(type, message, cause?)`\n   - Standardize error codes\n\n3. Error categorization\n   - categorizeError(error): 'validation' | 'io' | 'security' | 'config' | 'unknown'\n\n4. Error formatting\n   - formatError(error): user-friendly message\n\nIntegration: Update model-tester.ts, config.ts, schema.ts to use these utilities. Replace generic Error throws with specific AppError subclasses.",
+        "testStrategy": "Test error creation, serialization, and categorization. Verify error messages are user-friendly. Ensure stack traces are preserved. Test error chaining with cause property."
+      },
+      {
+        "id": 10,
+        "title": "Add deprecation patterns to agentSystem.ts",
+        "description": "Add proper deprecation annotations and migration guides to deprecated exports in src/agentSystem.ts. Include JSDoc @deprecated tags with @see alternatives.",
+        "status": "pending",
+        "dependencies": [2],
+        "priority": "low",
+        "details": "agentSystem.ts contains deprecated exports that cause DRY violations. Instead of removing them immediately, add proper deprecation patterns:\n\n1. Add JSDoc @deprecated tags\n2. Include @see references to replacement APIs\n3. Consider runtime warnings (once per session)\n4. Document migration path in code comments\n\nExample:\n```typescript\n/**\n * @deprecated Use getAgentSystem() instead. This wrapper will be removed in v2.0.\n * @see getAgentSystem()\n */\nexport const getAgentSystemDeprecated = () => { ... }\n```\n\nThis provides backward compatibility while guiding users to modern APIs.",
+        "testStrategy": "Verify deprecation warnings appear in documentation. Check that JSDoc tools (like TypeScript language service) show deprecation hints. Ensure deprecated functions still work but emit warnings."
+      },
+      {
+        "id": 11,
+        "title": "Create typed test factories for test suite",
+        "description": "Refactor test/ directory to use typed factory pattern for test data creation. This eliminates duplicate test code and improves maintainability.",
+        "status": "pending",
+        "dependencies": [2],
+        "priority": "medium",
+        "details": "The test suite shows duplicate test code, especially in schema.test.ts (which we already cleaned). Implement a factory pattern for creating test fixtures:\n\nCreate `test/factories/` directory with:\n- `config-factory.ts` - createConfig(overrides?)\n- `agent-factory.ts` - createAgent(overrides?)\n- `model-factory.ts` - createModelConfig(overrides?)\n\nPattern:\n```typescript\nexport function createConfig(overrides: Partial<Config> = {}): Config {\n  return {\n    agents: [],\n    categories: {},\n    ...defaultConfig,\n    ...overrides,\n  };\n}\n```\n\nRefactor existing tests to use factories instead of inline data duplication.",
+        "testStrategy": "Verify all tests still pass after refactoring. Check that factories produce valid test data. Ensure factories are typed correctly and provide IntelliSense."
+      },
+      {
+        "id": 12,
+        "title": "Add configuration caching mechanism",
+        "description": "Enhance config.ts with a proper caching layer that invalidates on file changes. This is an extension of the LRU cache (task 6) with file watching capabilities.",
+        "status": "pending",
+        "dependencies": [6],
+        "priority": "low",
+        "details": "Beyond the basic LRU cache, add intelligent cache invalidation:\n\n1. Track file modification times (mtime)\n2. Invalidate cache entries when source files change\n3. Optional: use fs.watch for real-time invalidation (careful with performance)\n4. Add cache statistics (hit rate, size)\n\nImplementation:\n- Cache key: config file path\n- Cache value: { data: Config, mtime: number, expires: number }\n- On read: check mtime, invalidate if changed\n- On write: explicitly invalidate\n\nThis prevents stale config reads while maintaining performance.",
+        "testStrategy": "Test cache invalidation by modifying config files. Verify stale data is not served. Benchmark cache hit rates. Test edge cases: file deleted, permissions changed, etc."
+      },
+      {
+        "id": 13,
+        "title": "Add custom error messages to Zod schemas",
+        "description": "Review and enhance Zod schemas in src/schema.ts with custom error messages. Improve validation error clarity for users.",
+        "status": "pending",
+        "dependencies": [4],
+        "priority": "low",
+        "details": "The research indicates Zod schemas should have custom error messages. Review all Zod schemas in schema.ts and add `.describe()` or custom error messages where helpful:\n\n```typescript\nconst agentSchema = z.object({\n  id: z.string().min(1, 'Agent ID is required'),\n  model: z.string().min(1, 'Model name cannot be empty'),\n  permissions: z.array(z.string()).optional().describe('List of allowed tools'),\n});\n```\n\nAlso ensure ZodError is handled specifically with context preservation when validation fails.",
+        "testStrategy": "Test validation errors produce clear, user-friendly messages. Verify error messages guide users to fix issues. Check that ZodError is caught and formatted appropriately."
+      },
+      {
+        "id": 14,
+        "title": "Optimize I/O using Bun.file() where applicable",
+        "description": "Review config.ts and other I/O-heavy modules to use Bun.file() instead of Node fs for better performance. This leverages Bun's optimized file I/O.",
+        "status": "pending",
+        "dependencies": [7],
+        "priority": "low",
+        "details": "Bun provides optimized file I/O via Bun.file(). Review the codebase for fs.readFileSync, fs.readFile, fs.writeFileSync, etc. and replace with Bun equivalents where beneficial:\n\n- fs.readFileSync → Bun.file(path).text() or .json()\n- fs.writeFileSync → Bun.write(path, data)\n\nConsiderations:\n- Bun.file() returns promises by default\n- Better performance for large files\n- Native TypeScript support (no transpile)\n- Keep backward compatibility if needed\n\nFocus on hot paths: config loading, backup creation, file scanning.",
+        "testStrategy": "Benchmark I/O performance before/after. Verify file operations still work correctly. Test error handling (file not found, permissions)."
+      },
+      {
+        "id": 15,
+        "title": "Add constants file for magic numbers",
+        "description": "Create src/constants.ts to centralize magic numbers and configuration values. This improves maintainability and clarity.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "low",
+        "details": "Research identified no constants file exists. Create one to hold:\n- Default cache sizes (e.g., LRU_CACHE_MAX_SIZE = 100)\n- Timeout values (e.g., DEFAULT_TIMEOUT_MS = 30000)\n- File paths patterns\n- Retry limits\n- Any other hardcoded numbers\n\nExample:\n```typescript\nexport const CONFIG = {\n  cache: {\n    maxSize: 100,\n    defaultTTL: 5 * 60 * 1000, // 5 minutes\n  },\n  io: {\n    defaultTimeout: 30000,\n    maxRetries: 3,\n  },\n  files: {\n    maxConfigDepth: 5,\n  },\n} as const;\n```\n\nRefactor code to use these constants instead of inline numbers.",
+        "testStrategy": "Verify all magic numbers are replaced. Check that constants are used consistently. Ensure constants are properly typed and exported."
+      }
+    ]
+  }
+}

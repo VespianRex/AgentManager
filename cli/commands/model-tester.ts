@@ -1,8 +1,22 @@
 #!/usr/bin/env bun
-import { createModelTester, ModelTesterOptions, BenchmarkConfig, BenchmarkReport } from "../../src/model-tester.js";
-import { readFile } from "fs/promises";
+import { createModelTester } from "../../src/services/model-tester/model-tester.js";
+import type { ModelTesterOptions, BenchmarkConfig, BenchmarkReport } from "../../src/services/model-tester/model-tester.js";
+import { TIMEOUT_LIMITS } from "../../src/types.js";
 import path from "path";
+import { openVerifiedFile } from "../../src/file-security.js";
 
+// Re-export the CLI-supported factory surface only.
+export {
+  createModelTester,
+  type ModelTesterOptions,
+  type BenchmarkConfig,
+  type BenchmarkReport,
+} from "../../src/services/model-tester/model-tester.js";
+
+// Also re-export the createModelTester as a named export
+export {
+  createModelTester as createModelTesterExport,
+} from "../../src/services/model-tester/model-tester.js";
 interface CLIArgs {
   model?: string;
   benchmark?: string; // Path to JSON file with array of benchmark configs
@@ -12,7 +26,7 @@ interface CLIArgs {
   help: boolean;
 }
 
-const MAX_TIMEOUT_MS = 60000;
+const MAX_TIMEOUT_MS = TIMEOUT_LIMITS.MAX_TIMEOUT_MS;
 
 function parseArgs(args: string[]): CLIArgs {
   const parsed: CLIArgs = {
@@ -34,11 +48,15 @@ function parseArgs(args: string[]): CLIArgs {
         break;
       case "--model":
       case "-m":
-        parsed.model = args[++i];
+        if (i + 1 < args.length) {
+          parsed.model = args[++i];
+        }
         break;
       case "--benchmark":
       case "-b":
-        parsed.benchmark = args[++i];
+        if (i + 1 < args.length) {
+          parsed.benchmark = args[++i];
+        }
         break;
       case "--cancel":
       case "-c":
@@ -46,10 +64,16 @@ function parseArgs(args: string[]): CLIArgs {
         break;
       case "--timeout":
       case "-t":
-        parsed.timeout = args[++i];
+        if (i + 1 < args.length) {
+          parsed.timeout = args[++i];
+        }
         break;
       case "--format":
       case "-f": {
+        if (i + 1 >= args.length) {
+          console.error("Error: Missing value for --format. Use 'json' or 'human'.");
+          process.exit(1);
+        }
         const format = args[++i];
         if (format === "json" || format === "human") {
           parsed.format = format;
@@ -254,11 +278,14 @@ async function runTest(model: string, timeoutMs: number, format: "json" | "human
       error: error instanceof Error ? error.message : String(error),
     };
 
+
     if (format === "json") {
       console.log(formatJSONOutput(errorResult));
     } else {
       console.log(`Error testing model ${model}: ${errorResult.error}`);
     }
+    // Exit with error code on test failures
+    process.exit(1);
   }
 }
 
@@ -292,8 +319,25 @@ async function runBenchmark(
 async function loadBenchmarkConfigs(filePath: string): Promise<BenchmarkConfig[]> {
   try {
     const absolutePath = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
-    const content = await readFile(absolutePath, "utf-8");
-    const configs = JSON.parse(content);
+
+    const handle = await openVerifiedFile(
+      absolutePath,
+      "Security violation: symlinks are not allowed for benchmark config files",
+    );
+    const content = await (async () => {
+      try {
+        return await handle.readFile({ encoding: "utf-8" });
+      } finally {
+        await handle.close();
+      }
+    })();
+
+    let configs: unknown;
+    try {
+      configs = JSON.parse(content);
+    } catch (parseError) {
+      throw new Error(`Invalid JSON in benchmark config: ${parseError instanceof Error ? parseError.message : "parse error"}`);
+    }
 
     if (!Array.isArray(configs)) {
       throw new Error("Benchmark config must be an array of model configurations");
@@ -301,7 +345,8 @@ async function loadBenchmarkConfigs(filePath: string): Promise<BenchmarkConfig[]
 
     // Validate each config has required fields
     configs.forEach((config, index) => {
-      if (!config.model) {
+      const modelName = String(config.model ?? "").trim();
+      if (!modelName) {
         throw new Error(`Config at index ${index} is missing required 'model' field`);
       }
       if (!config.prompt) {
@@ -328,6 +373,7 @@ const main = async () => {
 
   if (args.help) {
     showHelp();
+    // Exit with 0 for help display - not an error
     process.exit(0);
   }
 
@@ -366,7 +412,7 @@ const main = async () => {
 
   // Single model test mode
   if (!args.model) {
-    console.error("Error: Model name is required. Use --model <name> or --benchmark <file>");
+    // Missing the required mode flag is an error.
     showHelp();
     process.exit(1);
   }
@@ -389,7 +435,9 @@ const main = async () => {
   await runTest(args.model, timeoutMs, args.format);
 };
 
-main().catch((error) => {
-  console.error(`Fatal error: ${error instanceof Error ? error.message : String(error)}`);
-  process.exit(1);
-});
+if (import.meta.main) {
+  main().catch((error) => {
+    console.error(`Fatal error: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  });
+}
